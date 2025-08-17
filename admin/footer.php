@@ -28,7 +28,7 @@
             <?php echo trans('text_version'); ?>
             <?php echo settings('version'); ?>
     	</div>
-    	<div class="copyright">Copyright © <?php echo date('Y'); ?> <a href="http://itsolution24.com">ITsolution24.com</a>, All rights reserved.</div>
+    	<div class="copyright">Copyright © <?php echo date('Y'); ?> <a href="http://pasah.net">pasah.net</a>, All rights reserved.</div>
     </footer>
 </div>
 <!-- End Wrapper -->

@@ -438,6 +438,8 @@
             <svg class="svg-icon"><use href="#icon-settings"></svg>
             <span>
               <?php echo trans('menu_system');?>
+            </span>    <span>
+              <?php echo trans('menu_system');?>
             </span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
