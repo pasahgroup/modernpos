@@ -427,7 +427,7 @@ class ModelProduct extends Model
 		return $statement->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function getProductImages($product_id) 
+	public function getMaterialImages($product_id) 
 	{
 		$statement = $this->db->prepare("SELECT * FROM `product_images` WHERE `product_images`.`product_id` = ? ORDER BY `sort_order` ASC");
 	    $statement->execute(array($product_id));

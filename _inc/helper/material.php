@@ -23,33 +23,34 @@ function get_the_material($id, $field = null, $store_id = null)
 	return $product;
 }
 
-function material_selling_price($p_id, $from, $to)
-{	
-	$product_model = registry()->get('loader')->model('material');
-	return $product_model->getSellingPrice($p_id, $from, $to);
-}
+// function product_selling_price($p_id, $from, $to)
+// {	
+// 	$product_model = registry()->get('loader')->model('material');
+// 	return $product_model->getSellingPrice($p_id, $from, $to);
+// }
 
-function material_purchase_price($p_id, $from, $to)
-{	
-	$product_model = registry()->get('loader')->model('material');
-	return $product_model->getpurchasePrice($p_id, $from, $to);
-}
+// function product_purchase_price($p_id, $from, $to)
+// {	
+// 	$product_model = registry()->get('loader')->model('product');
+// 	return $product_model->getpurchasePrice($p_id, $from, $to);
+// }
 
-function total_material_today($store_id = null)
-{	
-	$product_model = registry()->get('loader')->model('material');
-	return $product_model->totalToday($store_id);
-}
+// function total_product_today($store_id = null)
+// {	
+// 	$product_model = registry()->get('loader')->model('product');
+// 	return $product_model->totalToday($store_id);
 
-function total_material($from = null, $to = null, $store_id = null)
-{	
-	$product_model = registry()->get('loader')->model('material');
-	return $product_model->total($from, $to, $store_id);
+// }
 
-}
+// function total_product($from = null, $to = null, $store_id = null)
+// {	
+// 	$product_model = registry()->get('loader')->model('product');
+// 	return $product_model->total($from, $to, $store_id);
 
-function total_trash_material()
-{	
-	$product_model = registry()->get('loader')->model('material');
-	return $product_model->totalTrash();
-}
+// }
+
+// function total_trash_product()
+// {	
+// 	$product_model = registry()->get('loader')->model('product');
+// 	return $product_model->totalTrash();
+// }
