@@ -149,7 +149,10 @@ require_once DIR_HELPER . 'invoice.php';
 require_once DIR_HELPER . 'quotation.php';
 require_once DIR_HELPER . 'purchase.php';
 require_once DIR_HELPER . 'pmethod.php';
+
 require_once DIR_HELPER . 'product.php';
+require_once DIR_HELPER . 'material.php';
+
 require_once DIR_HELPER . 'report.php';
 require_once DIR_HELPER . 'store.php';
 require_once DIR_HELPER . 'supplier.php';
@@ -470,7 +473,7 @@ if (defined('INSTALLED') && defined('BLOCKED')) { die("<!DOCTYPE html>
 		<section id=\"wrapper\">
 			<h1 style=\"color:red\">The App is Blocked!!!</h1>
 			<div id=\"content\">
-				<p>Your purchase code is not valid. If you have a valid purchase code then claim a valid purchage code here: <a href=\"mailto:itsolution24bd@gmail.com\">itsolution24bd@gmail.com</a> | +8801737346122</p>
+				<p>Your purchase code is not valid. If you have a valid purchase code then claim a valid purchage code here: <a href=\"mailto:buruwawa@gmail.com\">buruwawa@gmail.com</a> | +255764706227</p>
 				<p style=\"color:blue;\">&mdash; <a style=\"color:green;\" target=\"_blink\" href=\"http://itsolution24.com\" title=\"ITsolution24.com\">ITsolution24.com</a></p>
 			</div>
 		</section>

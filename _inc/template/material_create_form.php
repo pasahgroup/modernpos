@@ -1,4 +1,4 @@
-<form id="form-purchase" class="form-horizontal" action="purchase.php" method="post" enctype="multipart/form-data">
+<form id="form-purchase" class="form-horizontal" action="material_purchase.php" method="post" enctype="multipart/form-data">
 <input type="hidden" name="action_type" value="CREATE">
   <div class="box-body">
     <div class="form-group">

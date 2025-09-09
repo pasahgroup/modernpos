@@ -1,4 +1,4 @@
-window.angularApp.controller("PurchaseController", [
+window.angularApp.controller("MaterialPurchaseController", [
     "$scope",
     "API_URL",
     "window",

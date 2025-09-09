@@ -437,9 +437,7 @@
           <a href="store_single.php">
             <svg class="svg-icon"><use href="#icon-settings"></svg>
             <span>
-              <?php echo trans('menu_system');?>
-            </span>    <span>
-              <?php echo trans('menu_system');?>
+              <?php echo trans('text_production');?>
             </span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
@@ -450,7 +448,7 @@
                 <a href="store.php">
                   <svg class="svg-icon"><use href="#icon-list"></svg>
                   <span>
-                    <?php echo trans('menu_store'); ?>
+                    <?php echo trans('text_Product_productions'); ?>
                   </span>
                   <i class="fa fa-angle-left pull-right"></i>
                 </a>
@@ -485,54 +483,42 @@
               </li>
             <?php endif; ?>
 
-            <?php if (user_group_id() == 1 || has_permission('access', 'receipt_template')) : ?>
-              <li class="<?php echo current_nav() == 'receipt_template' ? 'active' : null; ?>">
-                <a href="receipt_template.php?template_id=<?php echo get_preference('receipt_template') ? get_preference('receipt_template') : 1;?>">
-                  <svg class="svg-icon"><use href="#icon-report"></svg>
-                  <span>
-                    <?php echo trans('menu_receipt_template'); ?>
-                  </span>
-                </a>
-              </li>
-            <?php endif; ?>
+          </ul>
 
-            <?php if (user_group_id() == 1 || has_permission('access', 'read_user_preference')) : ?>
-              <li class="<?php echo current_nav() == 'user_preference' ? 'active' : null; ?>">
-                <a href="user_preference.php">
-                  <svg class="svg-icon"><use href="#icon-heart"></svg>
-                  <span>
-                    <?php echo trans('menu_user_preference'); ?>
-                  </span>
-                </a>
-              </li>
-            <?php endif; ?>
 
-            <?php if (user_group_id() == 1 || has_permission('access', 'read_brand')) : ?>
-              <li class="treeview<?php echo current_nav() == 'brand' || current_nav() == 'brand_profile' ? ' active' : null; ?>">
-                <a href="brand.php">
-                  <svg class="svg-icon"><use href="#icon-brand"></svg>
+              <ul class="treeview-menu">
+            <?php if (user_group_id() == 1 || has_permission('access', 'read_store')) : ?>
+              <li class="treeview<?php echo current_nav() == 'store' || current_nav() == 'store_create' || current_nav() == 'store_single' ? ' active' : null; ?>">
+                <a href="store.php">
+                  <svg class="svg-icon"><use href="#icon-list"></svg>
                   <span>
-                    <?php echo trans('menu_brand'); ?>
+                    <?php echo trans('text_Product_stores'); ?>
                   </span>
                   <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                  <?php if (user_group_id() == 1 || has_permission('access', 'create_brand')): ?>
-                    <li class="<?php echo current_nav() == 'brand' && isset($request->get['box_state']) ? ' active' : null; ?>">
-                      <a href="brand.php?box_state=open">
+                  <?php if (user_group_id() == 1 || has_permission('access', 'create_store')): ?>
+                    <li class="<?php echo current_nav() == 'store_create' ? ' active' : null; ?>">
+                      <a href="store_create.php">
                         <svg class="svg-icon"><use href="#icon-plus"></svg>
-                        <span>
-                          <?php echo trans('menu_add_brand'); ?>
-                        </span>
+                        <?php echo trans('menu_create_store'); ?>
                       </a>
                     </li>
                   <?php endif; ?>
-                  <?php if (user_group_id() == 1 || has_permission('access', 'read_brand')): ?>
-                    <li class="<?php echo current_nav() == 'brand'  && !isset($request->get['box_state']) ? ' active' : null; ?>">
-                      <a href="brand.php">
+                  <?php if (user_group_id() == 1 || has_permission('access', 'read_store')): ?>
+                    <li class="<?php echo current_nav() == 'store' ? ' active' : null; ?>">
+                      <a href="store.php">
                         <svg class="svg-icon"><use href="#icon-list"></svg>
+                        <?php echo trans('menu_store_list'); ?>
+                      </a>
+                    </li>
+                  <?php endif; ?>
+                  <?php if (user_group_id() == 1 || has_permission('access', 'read_store')) : ?>
+                    <li class="<?php echo current_nav() == 'store_single' ? 'active' : null; ?>">
+                      <a href="store_single.php">
+                        <svg class="svg-icon"><use href="#icon-settings"></svg>
                         <span>
-                          <?php echo trans('menu_brand_list'); ?>
+                          <?php echo trans('menu_store_setting'); ?>
                         </span>
                       </a>
                     </li>
@@ -541,107 +527,81 @@
               </li>
             <?php endif; ?>
 
-            <?php if (user_group_id() == 1 || has_permission('access', 'read_currency')) : ?>
-              <li class="<?php echo current_nav() == 'currency' ? 'active' : null; ?>">
-                <a href="currency.php">
+          </ul>
+
+
+
+<ul class="treeview-menu">
+            <?php if (user_group_id() == 1 || has_permission('access', 'read_store')) : ?>
+              <li class="treeview<?php echo current_nav() == 'store' || current_nav() == 'store_create' || current_nav() == 'store_single' ? ' active' : null; ?>">
+                <a href="store.php">
+                  <svg class="svg-icon"><use href="#icon-list"></svg>
+                  <span>
+                    <?php echo trans('text_Material_purchase'); ?>
+                  </span>
+                  <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                                  <?php if (user_group_id() == 1 || has_permission('access', 'create_purchase_invoice')) : ?>
+              <li class="<?php echo current_nav() == 'purchase' && isset($request->get['box_state']) ? 'active' : null; ?>">
+                <a href="material_purchase.php?box_state=open">
+                  <svg class="svg-icon"><use href="#icon-plus"></svg>
+                  <span>
+                    <?php echo trans('menu_Material_purchase'); ?>
+                  </span>
+                </a>
+              </li>
+            <?php endif; ?>
+            <?php if (user_group_id() == 1 || has_permission('access', 'read_purchase_list')) : ?>
+              <li class="<?php echo current_nav() == 'purchase' && !isset($request->get['box_state']) && !(isset($request->get['type']) && $request->get['type'] == 'due') ? 'active' : null; ?>">
+                <a href="material_purchase.php">
+                  <svg class="svg-icon"><use href="#icon-list"></svg>
+                  <span>
+                    <?php echo trans('menu_material_purchase_list'); ?>
+                  </span>
+                </a>
+              </li>
+            <?php endif; ?>
+            <?php if (user_group_id() == 1 || has_permission('access', 'read_purchase_list')) : ?>
+              <li class="<?php echo (current_nav() == 'purchase') && isset($request->get['type']) && $request->get['type'] == 'due' ? 'active' : null; ?>">
+                <a href="material_purchase.php?type=due">
                   <svg class="svg-icon"><use href="#icon-money"></svg>
                   <span>
-                    <?php echo trans('menu_currency'); ?>
+                    <?php echo trans('menu_material_due_invoice'); ?>
                   </span>
                 </a>
               </li>
             <?php endif; ?>
-
-            <?php if (user_group_id() == 1 || has_permission('access', 'read_pmethod')) : ?>
-              <li class="<?php echo current_nav() == 'pmethod' ? 'active' : null; ?>">
-                <a href="pmethod.php">
-                  <svg class="svg-icon"><use href="#icon-money"></svg>
+            <?php if (user_group_id() == 1 || has_permission('access', 'read_purchase_return')) : ?>
+              <li class="<?php echo (current_nav() == 'purchase_return') ? 'active' : null; ?>">
+                <a href="purchase_return.php">
+                  <svg class="svg-icon"><use href="#icon-back-arrow"></svg>
                   <span>
-                    <?php echo trans('menu_pmethod'); ?>
+                    <?php echo trans('menu_return_list'); ?>
                   </span>
                 </a>
               </li>
             <?php endif; ?>
-
-            <?php if (user_group_id() == 1 || has_permission('access', 'read_unit')) : ?>
-              <li class="<?php echo current_nav() == 'unit' ? 'active' : null; ?>">
-                <a href="unit.php">
-                  <svg class="svg-icon"><use href="#icon-unit"></svg>
-                  <span>
-                    <?php echo trans('menu_unit'); ?>
-                  </span>
+            <?php if (user_group_id() == 1 || has_permission('access', 'read_purchase_log')): ?>
+              <li class="<?php echo current_nav() == 'purchase_log' ? ' active' : null; ?>">
+                <a href="purchase_log.php">
+                  <svg class="svg-icon"><use href="#icon-list"></svg>
+                   <?php echo trans('menu_purchase_logs'); ?>
                 </a>
               </li>
             <?php endif; ?>
-
-            <?php if (user_group_id() == 1 || has_permission('access', 'read_taxrate')) : ?>
-              <li class="<?php echo current_nav() == 'taxrate' ? 'active' : null; ?>">
-                <a href="taxrate.php">
-                  <svg class="svg-icon"><use href="#icon-money"></svg>
-                  <span>
-                    <?php echo trans('menu_taxrate'); ?>
-                  </span>
-                </a>
-              </li>
-            <?php endif; ?>
-
-            <?php if (user_group_id() == 1 || has_permission('access', 'read_box')) : ?>
-              <li class="<?php echo current_nav() == 'box' ? 'active' : null; ?>">
-                <a href="box.php">
-                  <svg class="svg-icon"><use href="#icon-box"></svg>
-                  <span>
-                    <?php echo trans('menu_box'); ?>
-                  </span>
-                </a>
-              </li>
-            <?php endif; ?>
-
-            <?php if (user_group_id() == 1 || has_permission('access', 'read_printer')) : ?>
-              <li class="<?php echo current_nav() == 'printer' ? 'active' : null; ?>">
-                <a href="printer.php">
-                  <svg class="svg-icon"><use href="#icon-printer"></svg>
-                  <span>
-                    <?php echo trans('menu_printer'); ?>
-                  </span>
-                </a>
-              </li>
-            <?php endif; ?>
-
-            <?php if (user_group_id() == 1 || has_permission('access', 'read_language')) : ?>
-              <li class="<?php echo current_nav() == 'language' ? 'active' : null; ?>">
-                <a href="language.php?lang=en">
-                  <svg class="svg-icon"><use href="#icon-star"></svg>
-                  <span>
-                    <?php echo trans('menu_language'); ?>
-                  </span>
-                </a>
-              </li>
-            <?php endif; ?>
-
-            <?php if ((user_group_id() == 1 || has_permission('access', 'backup') || has_permission('access', 'restore')) && !DEMO) : ?>
-              <li class="<?php echo current_nav() == 'backup_restore' ? 'active' : null; ?>">
-                <a href="backup_restore.php">
-                  <svg class="svg-icon"><use href="#icon-backup"></svg>
-                  <span>
-                    <?php echo trans('menu_backup_restore'); ?>
-                  </span>
-                </a>
-              </li>
-            <?php endif; ?>
-
-            <?php if ((user_group_id() == 1 || has_permission('access', 'reset')) && !DEMO) : ?>
-              <li class="<?php echo current_nav() == 'reset' ? 'active' : null; ?>">
-                <a href="reset.php">
-                  <svg class="svg-icon"><use href="#icon-minus"></svg>
-                  <span>
-                    <?php echo trans('menu_data_reset'); ?>
-                  </span>
-                </a>
+                </ul>
               </li>
             <?php endif; ?>
 
           </ul>
         </li>
+
+
+
+
+
+
       <?php endif; ?>
 
 
