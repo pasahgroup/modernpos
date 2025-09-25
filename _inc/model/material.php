@@ -556,7 +556,7 @@ class ModelProduct extends Model
 		return $statement->rowCount();
 	}
 
-	public function total($from, $to, $store_id = null) 
+	public function totalm($from, $to, $store_id = null) 
 	{
 		$store_id = $store_id ? $store_id : store_id();
 		$where_query = "`p2s`.`store_id` = {$store_id} AND `p2s`.`status` = 1";

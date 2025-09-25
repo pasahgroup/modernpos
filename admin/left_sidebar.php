@@ -346,6 +346,7 @@
             </span> 
             <i class="fa fa-angle-left pull-right"></i>
           </a>
+          
           <ul class="treeview-menu">
             <?php if (user_group_id() == 1 || has_permission('access', 'read_product')): ?>
               <li class="<?php echo (current_nav() == 'product' && !isset($request->get['box_state'])) || current_nav() == 'product_details' ? ' active' : null; ?>">
@@ -593,8 +594,108 @@
                 </ul>
               </li>
             <?php endif; ?>
-
           </ul>
+
+
+
+<ul class="treeview-menu">
+            <?php if (user_group_id() == 1 || has_permission('access', 'read_store')) : ?>
+              <li class="treeview<?php echo current_nav() == 'store' || current_nav() == 'store_create' || current_nav() == 'store_single' ? ' active' : null; ?>">
+                <a href="store.php">
+                  <svg class="svg-icon"><use href="#icon-list"></svg>
+                  <span>
+                    <?php echo trans('text_Materials'); ?>
+                  </span>
+                  <i class="fa fa-angle-left pull-right"></i>
+                </a>
+              
+
+
+
+
+
+    <ul class="treeview-menu">
+            <?php if (user_group_id() == 1 || has_permission('access', 'read_product')): ?>
+              <li class="<?php echo (current_nav() == 'product' && !isset($request->get['box_state'])) || current_nav() == 'product_details' ? ' active' : null; ?>">
+                <a href="material.php">
+                  <svg class="svg-icon"><use href="#icon-list"></svg>
+                  <?php echo trans('menu_material_list'); ?>
+                </a>
+              </li>
+            <?php endif; ?>
+            <?php if (user_group_id() == 1 || has_permission('access', 'read_product')): ?>
+              <li class="<?php echo current_nav() == 'product' && isset($request->get['box_state']) ? ' active' : null; ?>">
+                <a href="product.php?box_state=open">
+                  <svg class="svg-icon"><use href="#icon-plus"></svg>
+                  <?php echo trans('menu_add_product'); ?>
+                </a>
+              </li>
+            <?php endif; ?>
+            <?php if (user_group_id() == 1 || has_permission('access', 'barcode_print')): ?>
+              <li class="<?php echo current_nav() == 'barcode_print' ? ' active' : null; ?>">
+                <a href="barcode_print.php">
+                  <svg class="svg-icon"><use href="#icon-barcode"></svg>
+                  <?php echo trans('menu_barcode_print'); ?>
+                </a>
+              </li>
+            <?php endif; ?>
+            <?php if (user_group_id() == 1 || has_permission('access', 'read_category')): ?>
+              <li class="<?php echo current_nav() == 'category' && !isset($request->get['box_state']) ? ' active' : null; ?>">
+                <a href="category.php">
+                  <svg class="svg-icon"><use href="#icon-category"></svg>
+                   <?php echo trans('menu_category'); ?>
+                </a>
+              </li>
+            <?php endif; ?>
+            <?php if (user_group_id() == 1 || has_permission('access', 'crate_category')): ?>
+              <li class="<?php echo current_nav() == 'category' && isset($request->get['box_state']) ? ' active' : null; ?>">
+                <a href="category.php?box_state=open">
+                  <svg class="svg-icon"><use href="#icon-plus"></svg>
+                   <?php echo trans('menu_add_category'); ?>
+                </a>
+              </li>
+            <?php endif; ?>
+            <?php if (user_group_id() == 1 || has_permission('access', 'import_product')): ?>
+              <li class="<?php echo current_nav() == 'import_product' ? ' active' : null; ?>">
+                <a href="import_product.php">
+                  <svg class="svg-icon"><use href="#icon-import"></svg>
+                  <?php echo trans('menu_product_import'); ?>
+                </a>
+              </li>
+            <?php endif; ?>
+            <?php if (user_group_id() == 1 || has_permission('access', 'read_stock_alert')): ?>
+              <li class="<?php echo current_nav() == 'stock_alert' ? ' active' : null; ?>">
+                <a href="stock_alert.php">
+                  <svg class="svg-icon"><use href="#icon-alert"></svg>
+                  <?php echo trans('menu_stock_alert'); ?>
+                  <?php if (total_out_of_stock() > 0) : ?>
+                    <span class="label label-danger bg-yellow">
+                      <?php echo total_out_of_stock(); ?>
+                    </span>
+                  <?php endif; ?>
+                </a>
+              </li>
+            <?php endif; ?>
+            <?php if (get_preference('expiry_yes') && (user_group_id() == 1 || has_permission('access', 'read_expired_product'))): ?>
+              <li class="<?php echo current_nav() == 'expired' ? ' active' : null; ?>">
+                <a href="expired.php">
+                  <svg class="svg-icon"><use href="#icon-expired"></svg>
+                  <?php echo trans('menu_expired'); ?>
+                  <?php if (total_expired() > 0) : ?>
+                    <span class="label label-warning bg-yellow">
+                      <?php echo total_expired(); ?>
+                    </span>
+                  <?php endif; ?>
+                </a>
+              </li>
+            <?php endif; ?>
+          </ul>
+
+            </li>
+            <?php endif; ?>
+          </ul>
+
+
         </li>
 
 

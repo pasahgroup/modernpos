@@ -4,7 +4,8 @@ window.angularApp.controller("MaterialController", [
     "window",
     "jQuery",
     "$http",
-    "ProductViewModal",
+     // "MaterialViewModal",
+     'ProductViewModal',
     "ProductEditModal",
     "ProductDeleteModal",
     "ProductReturnModal",
@@ -22,6 +23,7 @@ function (
     window,
     $,
     $http,
+     //MaterialViewModal,
     ProductViewModal,
     ProductEditModal,
     ProductDeleteModal,
@@ -64,8 +66,7 @@ function (
         "processing": true,
         "dom": "lfBrtip",
         "serverSide": true,
-        // "ajax": API_URL + "/_inc/product.php?sup_id=" + supplierId + "&location=" + productLocation,
-                 "ajax": API_URL + "/_inc/material.php?sup_id=" + supplierId + "&location=" + productLocation,
+        "ajax": API_URL + "/_inc/material.php?sup_id=" + supplierId + "&location=" + productLocation,
         "order": [[ 2, "desc"]],
         "aLengthMenu": [
             [10, 25, 50, 100, 200, -1],
@@ -85,7 +86,7 @@ function (
             { 
                 "targets": [2],
                 'createdCell':  function (td, cellData, rowData, row, col) {
-                   $(td).attr('data-title', $("#materialmaterial-material-list thead tr th:eq(2)").html());
+                   $(td).attr('data-title', $("#material-material-list thead tr th:eq(2)").html());
                 }
             },
             { 
@@ -208,7 +209,7 @@ function (
                     $(win.document.body)
                         .css( 'font-size', '10pt' )
                         .append(
-                            '<div><b><i>Powered by: pasah.com</i></b></div>'
+                            '<div><b><i>Powered by: pasah.net</i></b></div>'
                         )
                         .prepend(
                             '<div class="dt-print-heading"><img class="logo" src="'+window.logo+'"/><h2 class="title">'+window.store.name+'</h2><p>Printed on: '+window.formatDate(new Date())+'</p></div>'

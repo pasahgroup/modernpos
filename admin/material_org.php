@@ -18,14 +18,14 @@ $document->setTitle(trans('title_product'));
 
 // Add Script
 $document->addScript('../assets/tinymce/tinymce.min.js');
-$document->addScript('../assets/itsolution24/angular/controllers/MaterialController.js');
+$document->addScript('../assets/itsolution24/angular/controllers/ProductController.js');
 
 // Include Header and Footer
 include("header.php"); 
 include ("left_sidebar.php"); 
 ?>
 <!-- Content Wrapper Start -->
-<div class="content-wrapper" ng-controller="MaterialController">
+<div class="content-wrapper" ng-controller="ProductController">
 
   	<!-- Content Header Start -->
 	<section class="content-header">
@@ -44,7 +44,7 @@ include ("left_sidebar.php");
 			</li>
 			<li>
 				<?php if (isset($request->get['location']) && $request->get['location']=='trash'): ?>
-					<a href="product.php"><?php echo trans('text_materials'); ?></a>	
+					<a href="material.php"><?php echo trans('text_materials'); ?></a>	
 				<?php else: ?>
 					<?php echo trans('text_materials'); ?>	
 				<?php endif; ?>
@@ -146,7 +146,7 @@ include ("left_sidebar.php");
 						                    </li>
 						                    <?php if(isset($request->get['location']) && $request->get['location'] == 'trash') : ?>
 						                    <li>
-						                    	<a id="restore-all" href="#" data-form="#product-list-form" data-datatable="product-product-list" data-loading-text="Restoring...">
+						                    	<a id="restore-all" href="#" data-form="#product-list-form" data-datatable="material-material-list" data-loading-text="Restoring...">
 						                      		<?php echo trans('button_restore_all'); ?>
 						                    	</a>
 						                    </li>

@@ -22,7 +22,7 @@ if (user_group_id() != 1 && !has_permission('access', 'read_product')) {
 }
 
 // LOAD PRODUCT MODEL
-$product_model = registry()->get('loader')->model('material');
+$product_model = registry()->get('loader')->model('product');
 
 // Validate post data
 function validate_request_data($request) 
@@ -114,8 +114,7 @@ function validate_request_data($request)
 
 // Check product existance by id
 function validate_existance($request, $p_id = 0)
-{
-  
+{  
 
   $statement = db()->prepare("SELECT * FROM `products` WHERE `p_name` = ? AND `p_id` != ?");
   $statement->execute(array($request->post['p_name'], $p_id));
@@ -126,7 +125,8 @@ function validate_existance($request, $p_id = 0)
 
 // Check product code
 function validate_product_code($request, $p_id = NULL)
-{  
+{
+  
 
   if ($p_id) {
     $statement = db()->prepare("SELECT * FROM `products` WHERE `p_code` = ? AND `p_id` != ?");
@@ -303,6 +303,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
     exit();
 
   } catch (Exception $e) { 
+
     header('HTTP/1.1 422 Unprocessable Entity');
     header('Content-Type: application/json; charset=UTF-8');
     echo json_encode(array('errorMsg' => $e->getMessage()));
@@ -353,13 +354,23 @@ $Hooks->do_action('Before_Showing_Product_List');
 $where_query = 'p2s.store_id = ' . store_id();
  
 // DB table to use
-$table = "(SELECT products.*, p2s.*, suppliers.sup_mobile, suppliers.sup_name as supplier, boxes.box_name FROM products 
-  LEFT JOIN product_to_store p2s ON (products.p_id = p2s.product_id) 
+// $table = "(SELECT products.*, p2s.*, suppliers.sup_mobile, suppliers.sup_name as supplier, boxes.box_name FROM products 
+//   LEFT JOIN product_to_store p2s ON (products.p_id = p2s.product_id) 
+//   LEFT JOIN suppliers ON (p2s.sup_id = suppliers.sup_id) 
+//   LEFT JOIN boxes ON (p2s.box_id = boxes.box_id) 
+//   WHERE $where_query GROUP by products.p_id
+//   ORDER BY p2s.p_date DESC
+//   ) as products";
+
+
+
+$table = "(SELECT materials.*, p2s.*, suppliers.sup_mobile, suppliers.sup_name as supplier, boxes.box_name FROM materials 
+  LEFT JOIN product_to_store p2s ON (materials.p_id = p2s.product_id) 
   LEFT JOIN suppliers ON (p2s.sup_id = suppliers.sup_id) 
   LEFT JOIN boxes ON (p2s.box_id = boxes.box_id) 
-  WHERE $where_query GROUP by products.p_id
+  WHERE $where_query GROUP by materials.p_id
   ORDER BY p2s.p_date DESC
-  ) as products";
+  ) as materials";
  
 // Table's primary key
 $primaryKey = 'p_id';
