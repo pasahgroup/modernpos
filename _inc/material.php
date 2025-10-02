@@ -22,7 +22,7 @@ if (user_group_id() != 1 && !has_permission('access', 'read_product')) {
 }
 
 // LOAD PRODUCT MODEL
-$product_model = registry()->get('loader')->model('product');
+$product_model = registry()->get('loader')->model('material');
 
 // Validate post data
 function validate_request_data($request) 
@@ -126,7 +126,6 @@ function validate_existance($request, $p_id = 0)
 // Check product code
 function validate_product_code($request, $p_id = NULL)
 {
-  
 
   if ($p_id) {
     $statement = db()->prepare("SELECT * FROM `products` WHERE `p_code` = ? AND `p_id` != ?");
@@ -162,10 +161,11 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
     $Hooks->do_action('Before_Create_Product', $request);
   
     // Insert product into database    
-    $product_id = $product_model->addProduct($request->post);
+     //$product_id = $product_model->addProduct($request->post);
+      $product_id = $product_model->addMaterial($request->post);
 
     // get product info
-    $product = $product_model->getProduct($product_id);
+    $product = $product_model->getMaterial($product_id);
 
     $Hooks->do_action('After_Create_Product', $product);
 
@@ -351,8 +351,7 @@ if (isset($request->get['p_id']) AND isset($request->get['action_type']) && $req
 
 $Hooks->do_action('Before_Showing_Product_List');
 
-$where_query = 'p2s.store_id = ' . store_id();
- 
+$where_query = 'p2s.store_id = ' . store_id(); 
 // DB table to use
 // $table = "(SELECT products.*, p2s.*, suppliers.sup_mobile, suppliers.sup_name as supplier, boxes.box_name FROM products 
 //   LEFT JOIN product_to_store p2s ON (products.p_id = p2s.product_id) 
@@ -361,7 +360,6 @@ $where_query = 'p2s.store_id = ' . store_id();
 //   WHERE $where_query GROUP by products.p_id
 //   ORDER BY p2s.p_date DESC
 //   ) as products";
-
 
 
 $table = "(SELECT materials.*, p2s.*, suppliers.sup_mobile, suppliers.sup_name as supplier, boxes.box_name FROM materials 

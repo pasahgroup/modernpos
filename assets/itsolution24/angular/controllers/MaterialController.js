@@ -64,8 +64,8 @@ function (
         "processing": true,
         "dom": "lfBrtip",
         "serverSide": true,
-        // "ajax": API_URL + "/_inc/product.php?sup_id=" + supplierId + "&location=" + productLocation,
-                 "ajax": API_URL + "/_inc/material.php?sup_id=" + supplierId + "&location=" + productLocation,
+        //"ajax": API_URL + "/_inc/product.php?sup_id=" + supplierId + "&location=" + productLocation,
+              "ajax": API_URL + "/_inc/material.php?sup_id=" + supplierId + "&location=" + productLocation,
         "order": [[ 2, "desc"]],
         "aLengthMenu": [
             [10, 25, 50, 100, 200, -1],

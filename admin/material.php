@@ -75,7 +75,7 @@ include ("left_sidebar.php");
 	    <div class="box box-info<?php echo create_box_state(); ?>">
 	        <div class="box-header with-border">
 				<h3 class="box-title">
-					<span class="fa fa-fw fa-plus"></span> <?php echo sprintf(trans('text_add_new'), trans('text_product')); ?>
+					<span class="fa fa-fw fa-plus"></span> <?php echo sprintf(trans('label_add_material')); ?>
 				</h3>
 				<button  type="button" class="btn btn-box-tool add-new-btn" data-widget="collapse" data-collapse="true">
 					<i class="fa <?php echo !create_box_state() ? 'fa-minus' : 'fa-plus'; ?>"></i>
@@ -99,7 +99,8 @@ include ("left_sidebar.php");
 	        <?php endif; ?>
 
 	        <!-- Include Product Form -->
-	        <?php include('../_inc/template/product_create_form.php'); ?>
+	        <?php include('../_inc/template/material_create_form.php'); ?>
+
 
 	    </div>
 	    <?php endif; ?>
@@ -146,7 +147,7 @@ include ("left_sidebar.php");
 						                    </li>
 						                    <?php if(isset($request->get['location']) && $request->get['location'] == 'trash') : ?>
 						                    <li>
-						                    	<a id="restore-all" href="#" data-form="#product-list-form" data-datatable="product-product-list" data-loading-text="Restoring...">
+						                    	<a id="restore-all" href="#" data-form="#product-list-form" data-datatable="material-material-list" data-loading-text="Restoring...">
 						                      		<?php echo trans('button_restore_all'); ?>
 						                    	</a>
 						                    </li>

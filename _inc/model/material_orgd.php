@@ -12,13 +12,13 @@
 | WEBSITE:			http://itsolution24.com
 | -----------------------------------------------------
 */
-class ModelMaterial extends Model 
+class ModelProduct extends Model 
 {
 	public function addMaterial($data) 
 	{
 		$purchase_price = isset($data['purchase_price']) ? (float)$data['purchase_price'] : 0;
 		$hsn_code = isset($data['hsn_code']) ? $data['hsn_code'] : NULL;
-    	$statement = $this->db->prepare("INSERT INTO `materials` (p_type, p_name, p_code, hsn_code, barcode_symbology, category_id, unit_id, p_image, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    	$statement = $this->db->prepare("INSERT INTO `products` (p_type, p_name, p_code, hsn_code, barcode_symbology, category_id, unit_id, p_image, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     	$statement->execute(array($data['p_type'], $data['p_name'], $data['p_code'], $hsn_code, $data['barcode_symbology'], $data['category_id'], $data['unit_id'], $data['p_image'], $data['description']));
     	$preference = isset($data['preference']) && !empty($data['preference']) ? serialize($data['preference']) : serialize(array());
 
@@ -28,6 +28,7 @@ class ModelMaterial extends Model
 			foreach ($data['product_store'] as $store_id) {
 
 			//--- unit to store ---//
+
 				$statement = $this->db->prepare("SELECT * FROM `unit_to_store` WHERE `store_id` = ? AND `uunit_id` = ?");
 			    $statement->execute(array($store_id, $data['unit_id']));
 			    $unit = $statement->fetch(PDO::FETCH_ASSOC);
@@ -68,7 +69,7 @@ class ModelMaterial extends Model
 
 			//--- product to store ---//
 
-				$statement = $this->db->prepare("INSERT INTO `material_to_store` SET `product_id` = ?, `store_id` = ?, `purchase_price` = ?, `sell_price` = ?, `sup_id` = ?, `brand_id` = ?, `box_id` = ?, `taxrate_id` = ?, `tax_method` = ?, `preference` = ?, `e_date` = ?, `alert_quantity` = ?, `p_date` = ?");
+				$statement = $this->db->prepare("INSERT INTO `product_to_store` SET `product_id` = ?, `store_id` = ?, `purchase_price` = ?, `sell_price` = ?, `sup_id` = ?, `brand_id` = ?, `box_id` = ?, `taxrate_id` = ?, `tax_method` = ?, `preference` = ?, `e_date` = ?, `alert_quantity` = ?, `p_date` = ?");
 				$statement->execute(array($product_id, $store_id, $purchase_price, $data['sell_price'], $data['sup_id'], $data['brand_id'], $data['box_id'], $data['taxrate_id'], $data['tax_method'], $preference, $data['e_date'], $data['alert_quantity'], date('Y-m-d')));
 			}
 		}
@@ -97,22 +98,22 @@ class ModelMaterial extends Model
 	public function updateStatus($product_id, $status, $store_id = null) 
 	{
 		$store_id = $store_id ? $store_id : store_id();
-		$statement = $this->db->prepare("UPDATE `material_to_store` SET `status` = ? WHERE `store_id` = ? AND `product_id` = ?");
+		$statement = $this->db->prepare("UPDATE `product_to_store` SET `status` = ? WHERE `store_id` = ? AND `product_id` = ?");
 		$statement->execute(array((int)$status, $store_id, $product_id));
 	}
 
 	public function updateSortOrder($product_id, $sort_order, $store_id = null) 
 	{
 		$store_id = $store_id ? $store_id : store_id();
-		$statement = $this->db->prepare("UPDATE `material_to_store` SET `sort_order` = ? WHERE `store_id` = ? AND `product_id` = ?");
+		$statement = $this->db->prepare("UPDATE `product_to_store` SET `sort_order` = ? WHERE `store_id` = ? AND `product_id` = ?");
 		$statement->execute(array((int)$sort_order, $store_id, $product_id));
 	}
 
-	public function editMaterial($product_id, $data) 
+	public function editProduct($product_id, $data) 
 	{
 		// Update product infomation
 		$hsn_code = isset($data['hsn_code']) ? $data['hsn_code'] : NULL;
-    	$statement = $this->db->prepare("UPDATE `materials` SET `p_type` = ?, `p_name` = ?, `p_code` = ?, `hsn_code` = ?, `barcode_symbology` = ?, `category_id` = ?, `unit_id` = ?, `p_image` = ?, `description` = ?  WHERE `p_id` = ?");
+    	$statement = $this->db->prepare("UPDATE `products` SET `p_type` = ?, `p_name` = ?, `p_code` = ?, `hsn_code` = ?, `barcode_symbology` = ?, `category_id` = ?, `unit_id` = ?, `p_image` = ?, `description` = ?  WHERE `p_id` = ?");
     	$statement->execute(array($data['p_type'], $data['p_name'], $data['p_code'], $hsn_code, $data['barcode_symbology'], $data['category_id'], $data['unit_id'], $data['p_image'], $data['description'], $product_id));
     	$preference = isset($data['preference']) && !empty($data['preference']) ? serialize($data['preference']) : serialize(array());
 		
@@ -175,16 +176,16 @@ class ModelMaterial extends Model
 
 			//--- product to store ---//
 
-				$statement = $this->db->prepare("SELECT * FROM `material_to_store` WHERE `store_id` = ? AND `product_id` = ?");
+				$statement = $this->db->prepare("SELECT * FROM `product_to_store` WHERE `store_id` = ? AND `product_id` = ?");
 			    $statement->execute(array($store_id, $product_id));
 			    $product = $statement->fetch(PDO::FETCH_ASSOC);
 			    if (!$product) {
-			    	$statement = $this->db->prepare("INSERT INTO `material_to_store` SET `product_id` = ?, `store_id` = ?, `sup_id` = ?, `brand_id` = ?, `box_id` = ?, `taxrate_id` = ?, `tax_method` = ?, `preference` = ?, `sell_price` = ?, `e_date` = ?, `alert_quantity` = ?, `p_date` = ?");
+			    	$statement = $this->db->prepare("INSERT INTO `product_to_store` SET `product_id` = ?, `store_id` = ?, `sup_id` = ?, `brand_id` = ?, `box_id` = ?, `taxrate_id` = ?, `tax_method` = ?, `preference` = ?, `sell_price` = ?, `e_date` = ?, `alert_quantity` = ?, `p_date` = ?");
 					$statement->execute(array($product_id, $store_id, $data['sup_id'], $data['brand_id'], $data['box_id'], $data['taxrate_id'], $data['tax_method'], $preference, $data['sell_price'], $data['e_date'], $data['alert_quantity'], date('Y-m-d')));
 			    
 			    } else {
 
-			    	$statement = $this->db->prepare("UPDATE `material_to_store` SET `sup_id` = ?, `brand_id` = ?, `box_id` = ?, `taxrate_id` = ?, `tax_method` = ?, `preference` = ?, `purchase_price` = ?, `sell_price` = ?, `e_date` = ?, `alert_quantity` = ? WHERE `store_id` = ? AND `product_id` = ?");
+			    	$statement = $this->db->prepare("UPDATE `product_to_store` SET `sup_id` = ?, `brand_id` = ?, `box_id` = ?, `taxrate_id` = ?, `tax_method` = ?, `preference` = ?, `purchase_price` = ?, `sell_price` = ?, `e_date` = ?, `alert_quantity` = ? WHERE `store_id` = ? AND `product_id` = ?");
 					$statement->execute(array($data['sup_id'], $data['brand_id'], $data['box_id'], $data['taxrate_id'], $data['tax_method'], $preference, $data['purchase_price'], $data['sell_price'], $data['e_date'], $data['alert_quantity'], $store_id, $product_id));
 			    }
 
@@ -197,7 +198,7 @@ class ModelMaterial extends Model
 				$unremoved_store_ids = array();
 
 				// get unwanted stores
-				$statement = $this->db->prepare("SELECT * FROM `material_to_store` WHERE `store_id` NOT IN (" . implode(',', $store_ids) . ")");
+				$statement = $this->db->prepare("SELECT * FROM `product_to_store` WHERE `store_id` NOT IN (" . implode(',', $store_ids) . ")");
 				$statement->execute();
 				$unwanted_stores = $statement->fetchAll(PDO::FETCH_ASSOC);
 				foreach ($unwanted_stores as $store) {
@@ -216,7 +217,7 @@ class ModelMaterial extends Model
 				    }
 
 				    // Delete unwanted store link
-					$statement = $this->db->prepare("DELETE FROM `material_to_store` WHERE `store_id` = ? AND `product_id` = ?");
+					$statement = $this->db->prepare("DELETE FROM `product_to_store` WHERE `store_id` = ? AND `product_id` = ?");
 					$statement->execute(array($store_id, $product_id));
 				}
 
@@ -236,12 +237,12 @@ class ModelMaterial extends Model
     	return $product_id;
 	}
 
-	public function deleteMaterial($product_id) 
+	public function deleteProduct($product_id) 
 	{
-		$statement = $this->db->prepare("DELETE FROM `materials` WHERE `p_id` = ? LIMIT 1");
+		$statement = $this->db->prepare("DELETE FROM `products` WHERE `p_id` = ? LIMIT 1");
         $statement->execute(array($product_id));
 
-        $statement = $this->db->prepare("DELETE FROM `material_to_store` WHERE `product_id` = ?");
+        $statement = $this->db->prepare("DELETE FROM `product_to_store` WHERE `product_id` = ?");
         $statement->execute(array($product_id));
 
         $statement = $this->db->prepare("DELETE FROM `product_images` WHERE `product_id` = ?");
@@ -288,12 +289,12 @@ class ModelMaterial extends Model
 	        }
         }
 
-        $this->deleteMaterial($product_id); 
+        $this->deleteProduct($product_id); 
 	}
 
 	public function getBelongsStore($p_id)
 	{
-		$statement = $this->db->prepare("SELECT * FROM `material_to_store` WHERE `product_id` = ?");
+		$statement = $this->db->prepare("SELECT * FROM `product_to_store` WHERE `product_id` = ?");
 		$statement->execute(array($p_id));
 
 		return $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -307,12 +308,12 @@ class ModelMaterial extends Model
 
 	}
 
-	public function getMaterial($product_id, $store_id = null) 
+	public function getProduct($product_id, $store_id = null) 
 	{
 		$store_id = $store_id ? $store_id : store_id();
-		$statement = $this->db->prepare("SELECT * FROM `materials`
-			LEFT JOIN `material_to_store` as p2s ON (`materials`.`p_id` = `p2s`.`product_id`) 
-			WHERE `p2s`.`store_id` = ? AND `materials`.`p_id` = ?");
+		$statement = $this->db->prepare("SELECT * FROM `products`
+			LEFT JOIN `product_to_store` as p2s ON (`products`.`p_id` = `p2s`.`product_id`) 
+			WHERE `p2s`.`store_id` = ? AND `products`.`p_id` = ?");
 	    $statement->execute(array($store_id, $product_id));
 	    $product = $statement->fetch(PDO::FETCH_ASSOC);
 	    if (!$product) {
@@ -320,7 +321,7 @@ class ModelMaterial extends Model
 	    }
 
 	    // Fetch stores related to products
-	    $statement = $this->db->prepare("SELECT * FROM `material_to_store` WHERE `product_id` = ?");
+	    $statement = $this->db->prepare("SELECT * FROM `product_to_store` WHERE `product_id` = ?");
 	    $statement->execute(array($product_id));
 	    $all_stores = $statement->fetchAll(PDO::FETCH_ASSOC);
 	    $stores = array();
@@ -343,11 +344,11 @@ class ModelMaterial extends Model
 	    return $product;
 	}
 
-	public function getMaterials($data = array(), $store_id = null) 
+	public function getProducts($data = array(), $store_id = null) 
 	{
 		$store_id = $store_id ? $store_id : store_id();
-		$sql = "SELECT * FROM `materials` p 
-			LEFT JOIN `material_to_store` p2s ON (`p`.`p_id` = `p2s`.`product_id`) 
+		$sql = "SELECT * FROM `products` p 
+			LEFT JOIN `product_to_store` p2s ON (`p`.`p_id` = `p2s`.`product_id`) 
 			LEFT JOIN `suppliers` s ON (`p2s`.`sup_id` = `s`.`sup_id`) 
 			LEFT JOIN `brands` b ON (`p2s`.`brand_id` = `b`.`brand_id`) 
 			LEFT JOIN `boxes` bx ON (`p2s`.`box_id` = `bx`.`box_id`) 
@@ -426,7 +427,7 @@ class ModelMaterial extends Model
 		return $statement->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function getMaterialImages($product_id) 
+	public function getProductImages($product_id) 
 	{
 		$statement = $this->db->prepare("SELECT * FROM `product_images` WHERE `product_images`.`product_id` = ? ORDER BY `sort_order` ASC");
 	    $statement->execute(array($product_id));
@@ -449,31 +450,31 @@ class ModelMaterial extends Model
 		}
 		if (!$query_string) {
 			if ($category_id) {
-				$statement = $this->db->prepare("SELECT * FROM `materials` 
-				LEFT JOIN `material_to_store` p2s ON (`materials`.`p_id` = `p2s`.`product_id`) 
-				WHERE `p2s`.`store_id` = ? AND (`p2s`.`quantity_in_stock` > 0 OR `materials`.`p_type` = 'service') AND `p2s`.`status` = ? AND `materials`.`category_id` = ?{$where_query} GROUP BY `product_id`{$limit_query}");
+				$statement = $this->db->prepare("SELECT * FROM `products` 
+				LEFT JOIN `product_to_store` p2s ON (`products`.`p_id` = `p2s`.`product_id`) 
+				WHERE `p2s`.`store_id` = ? AND (`p2s`.`quantity_in_stock` > 0 OR `products`.`p_type` = 'service') AND `p2s`.`status` = ? AND `products`.`category_id` = ?{$where_query} GROUP BY `product_id`{$limit_query}");
 				$statement->execute(array($store_id, 1, $category_id));
 			} else {
-				$statement = $this->db->prepare("SELECT `materials`.*, `selling_item`.`item_id`, SUM(`selling_item`.`item_total`) as `total` FROM `selling_item` 
-				RIGHT JOIN `materials` ON (`selling_item`.`item_id` = `materials`.`p_id`) 
-				RIGHT JOIN `material_to_store` p2s ON (`materials`.`p_id` = `p2s`.`product_id`) 
-				WHERE `p2s`.`store_id` = ? AND (`p2s`.`quantity_in_stock` > 0 OR `materials`.`p_type` = 'service') AND `p2s`.`status` = ?{$where_query}
+				$statement = $this->db->prepare("SELECT `products`.*, `selling_item`.`item_id`, SUM(`selling_item`.`item_total`) as `total` FROM `selling_item` 
+				RIGHT JOIN `products` ON (`selling_item`.`item_id` = `products`.`p_id`) 
+				RIGHT JOIN `product_to_store` p2s ON (`products`.`p_id` = `p2s`.`product_id`) 
+				WHERE `p2s`.`store_id` = ? AND (`p2s`.`quantity_in_stock` > 0 OR `products`.`p_type` = 'service') AND `p2s`.`status` = ?{$where_query}
 				GROUP BY `product_id` ORDER BY `total` DESC{$limit_query}");
 				$statement->execute(array($store_id, 1));
 			}
-	    	$materials = $statement->fetchAll(PDO::FETCH_ASSOC);
+	    	$products = $statement->fetchAll(PDO::FETCH_ASSOC);
 		}
 
 		if ($query_string || (!$query_string && empty($products))) {
 			if ($category_id) {
-				$statement = $this->db->prepare("SELECT * FROM `materials` 
-				LEFT JOIN `material_to_store` p2s ON (`materials`.`p_id` = `p2s`.`product_id`) 
-				WHERE `p2s`.`store_id` = ? AND (`p2s`.`quantity_in_stock` > 0 OR `materials`.`p_type` = 'service') AND (UPPER($field) LIKE '" . strtoupper($query_string) . "%' OR `materials`.`p_code` = '{$query_string}') AND `p2s`.`status` = ? AND `materials`.`category_id` = ?{$where_query}{$limit_query}");
+				$statement = $this->db->prepare("SELECT * FROM `products` 
+				LEFT JOIN `product_to_store` p2s ON (`products`.`p_id` = `p2s`.`product_id`) 
+				WHERE `p2s`.`store_id` = ? AND (`p2s`.`quantity_in_stock` > 0 OR `products`.`p_type` = 'service') AND (UPPER($field) LIKE '" . strtoupper($query_string) . "%' OR `products`.`p_code` = '{$query_string}') AND `p2s`.`status` = ? AND `products`.`category_id` = ?{$where_query}{$limit_query}");
 				$statement->execute(array($store_id, 1, $category_id));
 			} else {
-				$statement = $this->db->prepare("SELECT * FROM `materials` 
-				LEFT JOIN `material_to_store` p2s ON (`materials`.`p_id` = `p2s`.`product_id`) 
-				WHERE `p2s`.`store_id` = ? AND (`p2s`.`quantity_in_stock` > 0 OR `materials`.`p_type` = 'service') AND (UPPER($field) LIKE '" . strtoupper($query_string) . "%' OR `materials`.`p_code` = '{$query_string}') AND `p2s`.`status` = ?{$where_query}{$limit_query}");
+				$statement = $this->db->prepare("SELECT * FROM `products` 
+				LEFT JOIN `product_to_store` p2s ON (`products`.`p_id` = `p2s`.`product_id`) 
+				WHERE `p2s`.`store_id` = ? AND (`p2s`.`quantity_in_stock` > 0 OR `products`.`p_type` = 'service') AND (UPPER($field) LIKE '" . strtoupper($query_string) . "%' OR `products`.`p_code` = '{$query_string}') AND `p2s`.`status` = ?{$where_query}{$limit_query}");
 				$statement->execute(array($store_id, 1));
 			}
 			$products = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -549,13 +550,13 @@ class ModelMaterial extends Model
 			$to = date('Y-m-d H:i:s', strtotime($to.' '. '23:59:59'));
 			$where_query .= " AND `p2s`.`p_date` >= '{$from}' AND `p2s`.`p_date` <= '{$to}'";
 		}
-		$statement = $this->db->prepare("SELECT * FROM `materials` LEFT JOIN `material_to_store` p2s ON (`materials`.`p_id` = `p2s`.`product_id`) WHERE {$where_query}");
+		$statement = $this->db->prepare("SELECT * FROM `products` LEFT JOIN `product_to_store` p2s ON (`products`.`p_id` = `p2s`.`product_id`) WHERE {$where_query}");
 		$statement->execute(array());
 		
 		return $statement->rowCount();
 	}
 
-	public function totalm($from, $to, $store_id = null) 
+	public function total($from, $to, $store_id = null) 
 	{
 		$store_id = $store_id ? $store_id : store_id();
 		$where_query = "`p2s`.`store_id` = {$store_id} AND `p2s`.`status` = 1";
@@ -575,7 +576,7 @@ class ModelMaterial extends Model
 				$where_query .= " AND `p2s`.`p_date` >= '{$from}' AND `p2s`.`p_date` <= '{$to}'";
 			}
 		}
-		$statement = $this->db->prepare("SELECT * FROM `materials` LEFT JOIN `material_to_store` p2s ON (`materials`.`p_id` = `p2s`.`product_id`) WHERE {$where_query}");
+		$statement = $this->db->prepare("SELECT * FROM `products` LEFT JOIN `product_to_store` p2s ON (`products`.`p_id` = `p2s`.`product_id`) WHERE {$where_query}");
 		$statement->execute(array());
 		
 		return $statement->rowCount();
@@ -585,7 +586,7 @@ class ModelMaterial extends Model
 	{
 		$store_id = $store_id ? $store_id : store_id();
 
-		$statement = $this->db->prepare("SELECT * FROM `materials` LEFT JOIN `material_to_store` p2s ON (`materials`.`p_id` = `p2s`.`product_id`) WHERE `p2s`.`store_id` = ? AND `p2s`.`status` = ?");
+		$statement = $this->db->prepare("SELECT * FROM `products` LEFT JOIN `product_to_store` p2s ON (`products`.`p_id` = `p2s`.`product_id`) WHERE `p2s`.`store_id` = ? AND `p2s`.`status` = ?");
 		$statement->execute(array($store_id, 0));
 		
 		return $statement->rowCount();

@@ -1,5 +1,5 @@
 window.angularApp.factory("ProductViewModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, $scope) {
-    return function(product) {
+    return function(material) {
        var uibModalInstance = $uibModal.open({
             animation: true,
             ariaLabelledBy: "modal-title",
@@ -13,11 +13,11 @@ window.angularApp.factory("ProductViewModal", ["API_URL", "window", "jQuery", "$
                         "</div>",
             controller: function ($scope, $uibModalInstance) {
                 $http({
-                  url: window.baseUrl + "/_inc/product.php?p_id=" + product.p_id + "&action_type=VIEW",
+                  url: window.baseUrl + "/_inc/material.php?p_id=" + material.p_id + "&action_type=VIEW",
                   method: "GET"
                 })
                 .then(function(response, status, headers, config) {
-                    $scope.modal_title = product.p_name;
+                    $scope.modal_title = material.p_name;
                     $scope.rawHtml = $sce.trustAsHtml(response.data);
                 }, function(response) {
                     window.swal("Oops!", response.data.errorMsg, "error")
