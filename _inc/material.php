@@ -116,7 +116,7 @@ function validate_request_data($request)
 function validate_existance($request, $p_id = 0)
 {  
 
-  $statement = db()->prepare("SELECT * FROM `products` WHERE `p_name` = ? AND `p_id` != ?");
+  $statement = db()->prepare("SELECT * FROM `materials` WHERE `p_name` = ? AND `p_id` != ?");
   $statement->execute(array($request->post['p_name'], $p_id));
   if ($statement->rowCount() > 0) {
     throw new Exception(trans('error_product_exist'));
@@ -128,10 +128,10 @@ function validate_product_code($request, $p_id = NULL)
 {
 
   if ($p_id) {
-    $statement = db()->prepare("SELECT * FROM `products` WHERE `p_code` = ? AND `p_id` != ?");
+    $statement = db()->prepare("SELECT * FROM `materials` WHERE `p_code` = ? AND `p_id` != ?");
     $statement->execute(array($request->post['p_code'], $p_id));
   } else {
-    $statement = db()->prepare("SELECT * FROM `products` WHERE `p_code` = ?");
+    $statement = db()->prepare("SELECT * FROM `materials` WHERE `p_code` = ?");
     $statement->execute(array($request->post['p_code']));
   }
   if ($statement->rowCount() > 0) {
@@ -216,7 +216,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
     $Hooks->do_action('Before_Update_Product', $p_id);
     
     // Edit product        
-    $product_model->editProduct($p_id, $request->post);
+    $product_model->editMaterial($p_id, $request->post);
 
     $Hooks->do_action('After_Update_Product', $p_id);
 
@@ -260,7 +260,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
     }
 
     // Fetch product by id
-    $product = $product_model->getProduct($p_id);
+    $product = $product_model->getMaterial($p_id);
 
     // Check product exist or not
     if (!isset($product['p_id'])) {
@@ -321,7 +321,7 @@ if (isset($request->get['action_type']) && $request->get['action_type'] == 'CREA
 // Product edit form
 if (isset($request->get['p_id']) AND isset($request->get['action_type']) && $request->get['action_type'] == 'EDIT') 
 {
-  $product = $product_model->getProduct($request->get['p_id']);
+  $product = $product_model->getMaterial($request->get['p_id']);
   $preference = unserialize($product['preference']);
   include 'template/product_form.php';
   exit();
@@ -330,7 +330,7 @@ if (isset($request->get['p_id']) AND isset($request->get['action_type']) && $req
 // Product delete form
 if (isset($request->get['p_id']) AND isset($request->get['action_type']) && $request->get['action_type'] == 'DELETE') 
 {
-  $product = $product_model->getProduct($request->get['p_id']);
+  $product = $product_model->getMaterial($request->get['p_id']);
   include 'template/product_del_form.php';
   exit();
 }
@@ -338,7 +338,7 @@ if (isset($request->get['p_id']) AND isset($request->get['action_type']) && $req
 // Product view template
 if (isset($request->get['p_id']) AND isset($request->get['action_type']) && $request->get['action_type'] == 'VIEW') 
 {
-  $product = $product_model->getProduct($request->get['p_id']);
+  $product = $product_model->getMaterial($request->get['p_id']);
   include 'template/product_view_form.php';
   exit();
 }
@@ -363,7 +363,7 @@ $where_query = 'p2s.store_id = ' . store_id();
 
 
 $table = "(SELECT materials.*, p2s.*, suppliers.sup_mobile, suppliers.sup_name as supplier, boxes.box_name FROM materials 
-  LEFT JOIN product_to_store p2s ON (materials.p_id = p2s.product_id) 
+  LEFT JOIN material_to_store p2s ON (materials.p_id = p2s.product_id) 
   LEFT JOIN suppliers ON (p2s.sup_id = suppliers.sup_id) 
   LEFT JOIN boxes ON (p2s.box_id = boxes.box_id) 
   WHERE $where_query GROUP by materials.p_id
@@ -540,7 +540,7 @@ $columns = array(
         return '<button class="btn btn-sm btn-block btn-default" type="button" disabled><i class="fa fa-pencil"></i></button>';
       }
       if ($row['status']) {
-        return '<button class="btn btn-sm btn-block btn-primary edit-product" type="button" title="'.trans('button_edit').'"><i class="fa fa-pencil"></i></button>';
+        return '<button class="btn btn-sm btn-block btn-primary edit-material" type="button" title="'.trans('button_edit').'"><i class="fa fa-pencil"></i></button>';
       }
     }
   ),

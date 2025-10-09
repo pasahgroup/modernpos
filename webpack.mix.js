@@ -262,8 +262,18 @@ mix.scripts([
     'assets/itsolution24/angular/modals/ProductCreateModal.js',
     'assets/itsolution24/angular/modals/ProductDeleteModal.js',
     'assets/itsolution24/angular/modals/ProductEditModal.js',
+
+
+    'assets/itsolution24/angular/modals/ProductEditdModal.js',
+
     'assets/itsolution24/angular/modals/ProductReturnModal.js',
     'assets/itsolution24/angular/modals/ProductViewModal.js',
+    'assets/itsolution24/angular/modals/MaterialViewModal.js',
+     'assets/itsolution24/angular/modals/MaterialEditModal.js',
+
+ 'assets/itsolution24/angular/modals/ProductEditdModal.js',
+
+
     'assets/itsolution24/angular/modals/StoreDeleteModal.js',
     'assets/itsolution24/angular/modals/SupplierCreateModal.js',
     'assets/itsolution24/angular/modals/SupplierDeleteModal.js',

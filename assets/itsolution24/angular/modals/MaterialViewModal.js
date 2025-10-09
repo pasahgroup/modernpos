@@ -1,4 +1,4 @@
-window.angularApp.factory("ProductViewModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, $scope) {
+window.angularApp.factory("MaterialViewModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, $scope) {
     return function(material) {
        var uibModalInstance = $uibModal.open({
             animation: true,

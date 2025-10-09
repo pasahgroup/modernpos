@@ -5,7 +5,8 @@ window.angularApp.controller("MaterialController", [
     "jQuery",
     "$http",
     "ProductViewModal",
-    "ProductEditModal",
+    "MaterialEditModal",
+    //"ProductEditModal",
     "ProductDeleteModal",
     "ProductReturnModal",
     "CategoryCreateModal",
@@ -23,7 +24,7 @@ function (
     $,
     $http,
     ProductViewModal,
-    ProductEditModal,
+    MaterialEditModal,
     ProductDeleteModal,
     ProductReturnModal,
     CategoryCreateModal,
@@ -277,7 +278,7 @@ function (
                     doc['footer']=(function(page, pages) {
                         return {
                             columns: [
-                                'Powered by pasah.com',
+                                'powered by pasah.com',
                                 {
                                     // This is the right column
                                     alignment: 'right',
@@ -312,7 +313,7 @@ function (
     // End datatable
     //================
 
-    // Oopen edit modal dialog box by query string
+    // Open edit modal dialog box by query string
     if (window.getParameterByName("p_id") && window.getParameterByName("p_name")) {
         productId = window.getParameterByName("p_id");
         var productName = window.getParameterByName("p_name");
@@ -320,7 +321,7 @@ function (
         dt.DataTable().ajax.reload(function(json) {
             $.each(json.data, function(index, obj) {
                 if (obj.DT_RowId === "row_" + productId) {
-                    ProductEditModal({p_id: productId, p_name: obj.p_name});
+                    MaterialEditModal({p_id: productId, p_name: obj.p_name});
                     return false;
                 }
             });
@@ -430,10 +431,17 @@ function (
     });
 
     // Edit product
-    $(document).delegate(".edit-product", "click", function(e) {
+    // $(document).delegate(".edit-product", "click", function(e) {
+    //     e.stopPropagation();
+    //     e.preventDefault();
+    //     ProductEditModal_org(dt.DataTable().row($(this).closest("tr")).data());
+    // });
+
+     // Edit material
+    $(document).delegate(".edit-material", "click", function(e) {
         e.stopPropagation();
         e.preventDefault();
-        ProductEditModal(dt.DataTable().row($(this).closest("tr")).data());
+       MaterialEditModal(dt.DataTable().row($(this).closest("tr")).data());
     });
 
     // Product return button action
@@ -564,7 +572,7 @@ function (
               },
             })
             .then(function (willDelete) {
-                window.location = 'product.php';
+                window.location = 'material.php';
             });
 
         }, function(response) {

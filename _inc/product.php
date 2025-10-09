@@ -217,7 +217,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
     $Hooks->do_action('Before_Update_Product', $p_id);
     
     // Edit product        
-    $product_model->editProduct($p_id, $request->post);
+    $product_model->editProduc($p_id, $request->post);
 
     $Hooks->do_action('After_Update_Product', $p_id);
 

@@ -1,4 +1,4 @@
-<?php define('APPNAME', 'Modern-POS');define('APPID', '61e0732afd118dbe7f86af6d346770e2');
+<?php define('APPNAME', 'Modernpos_new');define('APPID', '61e0732afd118dbe7f86af6d346770e2');
 // $tmezone should be at line 3 
 $timezone = 'Africa/Nairobi';
 

@@ -434,7 +434,7 @@ class ModelMaterial extends Model
 	    return $rows;
 	}
 
-	public function getPosProducts($data = array(), $store_id = null) 
+	public function getPosMaterials($data = array(), $store_id = null) 
 	{
 		extract($data);
 		$store_id = $store_id ? $store_id : store_id();
@@ -581,7 +581,7 @@ class ModelMaterial extends Model
 		return $statement->rowCount();
 	}
 
-	public function totalTrash($store_id = null) 
+	public function totalTrashm($store_id = null) 
 	{
 		$store_id = $store_id ? $store_id : store_id();
 

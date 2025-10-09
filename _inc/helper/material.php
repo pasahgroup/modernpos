@@ -45,12 +45,12 @@ function total_material_today($store_id = null)
 function total_material($from = null, $to = null, $store_id = null)
 {	
 	$product_model = registry()->get('loader')->model('material');
-	return $product_model->totalm($from, $to, $store_id);
+	return $product_model->total($from, $to, $store_id);
 
 }
 
 function total_trash_material()
 {	
 	$product_model = registry()->get('loader')->model('material');
-	return $product_model->totalTrash();
+	return $product_model->totalTrashm();
 }

@@ -44,7 +44,7 @@ include ("left_sidebar.php");
 			</li>
 			<li>
 				<?php if (isset($request->get['location']) && $request->get['location']=='trash'): ?>
-					<a href="product.php"><?php echo trans('text_materials'); ?></a>	
+					<a href="material.php"><?php echo trans('text_materials'); ?></a>	
 				<?php else: ?>
 					<?php echo trans('text_materials'); ?>	
 				<?php endif; ?>
@@ -126,7 +126,7 @@ include ("left_sidebar.php");
 					                  	<span class="fa fa-trash"></span> 
 					                  	<?php echo trans('button_trash'); ?> 
 					                  	<i class="badge badge-warning" id="total-trash">
-					                  		<?php echo total_trash_product(); ?>
+					                  		<?php echo total_trash_material(); ?>
 					                  	</i>
 					                </a>
 				                </div>

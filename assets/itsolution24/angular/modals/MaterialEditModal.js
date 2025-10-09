@@ -1,4 +1,4 @@
-window.angularApp.factory("ProductEditModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "POSFilemanagerModal", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, POSFilemanagerModal, $scope) {
+window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "POSFilemanagerModal", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, POSFilemanagerModal, $scope) {
     return function(product) {
         var productId;
         $scope.imgArray = [];
