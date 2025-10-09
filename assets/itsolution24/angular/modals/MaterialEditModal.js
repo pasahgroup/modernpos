@@ -1,5 +1,5 @@
 window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "POSFilemanagerModal", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, POSFilemanagerModal, $scope) {
-    return function(product) {
+    return function(material) {
         var productId;
         $scope.imgArray = [];
         $scope.imgSerial = 0;
@@ -16,11 +16,11 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
                         "</div>",
             controller: function ($scope, $uibModalInstance) {
                 $http({
-                  url: window.baseUrl + "/_inc/material.php?p_id=" + product.p_id + "&action_type=EDIT",
+                  url: window.baseUrl + "/_inc/material.php?p_id=" + material.p_id + "&action_type=EDIT",
                   method: "GET"
                 })
                 .then(function(response, status, headers, config) {
-                    $scope.modal_title = product.p_name;
+                    $scope.modal_title = material.p_name;
                     $scope.rawHtml = $sce.trustAsHtml(response.data);
 
                     setTimeout(function() {
@@ -38,7 +38,7 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
 
                         // Product images
                         $http({
-                          url: window.baseUrl + "/_inc/ajax.php?p_id=" + product.p_id + "&type=PRODUCTIMAGES",
+                          url: window.baseUrl + "/_inc/ajax.php?p_id=" + material.p_id + "&type=PRODUCTIMAGES",
                           method: "GET"
                         })
                         .then(function(response, status, headers, config) {
