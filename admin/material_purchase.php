@@ -87,7 +87,10 @@ include ("left_sidebar.php") ;
         </div>
 
         <!-- Add Purchase Create Form -->
-        <?php include('../_inc/template/purchase_create_form.php'); ?>
+        {{--
+  <?php include('../_inc/template/purchase_create_form.php'); ?>
+        --}}
+        <?php include('../_inc/template/material_purchase_create_form.php'); ?>
         
       </div>
     <?php endif; ?>
