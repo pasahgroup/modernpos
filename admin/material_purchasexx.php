@@ -15,25 +15,26 @@ if (user_group_id() != 1 && !has_permission('access', 'read_purchase_list')) {
 
 // Set Document Title
 $document->setTitle(trans('title_purchase'));
+
 // Add Script
-$document->addScript('../assets/itsolution24/angular/controllers/MaterialController.js');
+$document->addScript('../assets/itsolution24/angular/controllers/MaterialPurchaseController.js');
 
 // ADD BODY CLASS
 $document->setBodyClass('sidebar-collapse');
 
 // Include Header and Footer
 include("header.php"); 
-include ("left_sidebar.php");
+include ("left_sidebar.php") ;
 ?>
 
 <!-- Content Wrapper Start -->
-<div class="content-wrapper" ng-controller="MaterialController">
+<div class="content-wrapper" ng-controller="MaterialPurchaseController">
 
   <!-- Content Header Start -->
   <section class="content-header">
     <?php include ("../_inc/template/partials/apply_filter.php"); ?>
     <h1>
-      <?php echo trans('text_material_purchase'); ?>
+      <?php echo trans('text_material_purchase_title'); ?>
       <small>
         <?php echo store('name'); ?>
       </small>
@@ -78,7 +79,7 @@ include ("left_sidebar.php");
       <div class="box box-info<?php echo create_box_state(); ?>">
         <div class="box-header with-border">
           <h3 class="box-title">
-            <span class="fa fa-fw fa-plus"></span> <?php echo trans('text_new_Material_purchase_title'); ?>
+            <span class="fa fa-fw fa-plus"></span> <?php echo trans('text_new_material_purchase_title'); ?>
           </h3>
           <button type="button" class="btn btn-box-tool add-new-btn" data-widget="collapse" data-collapse="true">
             <i class="fa <?php echo !create_box_state() ? 'fa-minus' : 'fa-plus'; ?>"></i>
@@ -86,7 +87,8 @@ include ("left_sidebar.php");
         </div>
 
         <!-- Add Purchase Create Form -->
-        <?php include('../_inc/template/material_create_form.php'); ?>        
+        <?php include('../_inc/template/material_purchase_create_form.php'); ?>
+        
       </div>
     <?php endif; ?>
 
