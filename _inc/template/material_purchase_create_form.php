@@ -1,4 +1,4 @@
-<form id="form-purchase" class="form-horizontal" action="purchase.php" method="post" enctype="multipart/form-data">
+<form id="form-purchase" class="form-horizontal" action="material_purchase.php" method="post" enctype="multipart/form-data">
 <input type="hidden" name="action_type" value="CREATE">
   <div class="box-body">
     <div class="form-group">
@@ -56,6 +56,7 @@
     </div>
 
     <div class="well well-sm">
+
       <div class="form-group sup-id-selector">
         <label for="sup_id" class="col-sm-3 control-label">
           <?php echo trans('label_supplier'); ?><i class="required">*</i>
@@ -74,7 +75,7 @@
 
       <div class="form-group">
         <label for="image" class="col-sm-3 control-label">
-          <?php echo trans('label_add_product'); ?>
+          <?php echo trans('label_add_material'); ?>
         </label>
         <div class="col-sm-6">
           <div class="input-group wide-tip">
@@ -83,7 +84,7 @@
             </div>
             <input type="text" name="add_item" value="" class="form-control input-lg autocomplete-product" id="add_item" data-type="p_name" onkeypress="return event.keyCode != 13;" onclick="this.select();" placeholder="<?php echo trans('placeholder_search_product'); ?>" autocomplete="off" tabindex="1">
             <div class="input-group-addon paddinglr-10">
-              <a id="add_new_product" href="product.php">
+              <a id="add_new_product" href="material.php">
                 <i class="fa fa-plus-circle addIcon fa-2x" id="addIcon"></i>
               </a>
             </div>

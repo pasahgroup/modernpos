@@ -506,6 +506,20 @@ class ModelReport extends Model
 		return $statement->rowCount();
 	}
 
+
+public function totalOutOfStockMaterial($store_id = null)
+	{
+		$store_id = $store_id ? $store_id : store_id();
+		$statement =  $this->db->prepare("SELECT * FROM `materials` 
+			LEFT JOIN `material_to_store` p2s ON (`materials`.`p_id` = `p2s`.`product_id`) 
+			WHERE `p2s`.`store_id` = ? AND `p_type` != 'service' AND (`p2s`.`quantity_in_stock` <= `alert_quantity`) AND `p2s`.`status` = 1");
+		$statement->execute(array($store_id));
+		return $statement->rowCount();
+	}
+
+
+
+
 	public function totalExpired($store_id = null)
 	{
 		$store_id = $store_id ? $store_id : store_id();

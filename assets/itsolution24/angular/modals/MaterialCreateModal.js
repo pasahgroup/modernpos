@@ -1,4 +1,4 @@
-window.angularApp.factory("ProductCreateModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "POSFilemanagerModal", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, POSFilemanagerModal, $scope) {
+window.angularApp.factory("MaterialCreateModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "POSFilemanagerModal", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, POSFilemanagerModal, $scope) {
     return function($scope) {
         var uibModalInstance = $uibModal.open({
             animation: true,
@@ -13,11 +13,11 @@ window.angularApp.factory("ProductCreateModal", ["API_URL", "window", "jQuery", 
                         "</div>",
             controller: function ($scope, $uibModalInstance) {
                 $http({
-                  url: window.baseUrl + "/_inc/product.php?action_type=CREATE",
+                  url: window.baseUrl + "/_inc/material.php?action_type=CREATE",
                   method: "GET"
                 })
                 .then(function(response, status, headers, config) {
-                    $scope.modal_title = "Create New Product 2";
+                    $scope.modal_title = "Create New Material";
                     $scope.rawHtml = $sce.trustAsHtml(response.data);
 
                     setTimeout(function() {

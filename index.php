@@ -344,7 +344,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && $request->get['action_type']
       <?php endif; ?>
     </div>
     <div class="copyright text-center">
-      <p>&copy; <a href="http://itsolution24.com">ITsolution24.com</a>, v<?php echo settings('version'); ?></p>
+      <p>&copy; <a href="http://pasah.net">pasah.net</a>, v<?php echo settings('version'); ?></p>
     </div>
   </section>
 

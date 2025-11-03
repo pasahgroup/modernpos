@@ -4,10 +4,9 @@ window.angularApp.controller("MaterialController", [
     "window",
     "jQuery",
     "$http",
-    "ProductViewModal",
+    "MaterialViewModal",
     "MaterialEditModal",
-    //"ProductEditModal",
-    "ProductDeleteModal",
+    "MaterialDeleteModal",
     "ProductReturnModal",
     "CategoryCreateModal",
     "SupplierCreateModal",
@@ -23,9 +22,9 @@ function (
     window,
     $,
     $http,
-    ProductViewModal,
+    MaterialViewModal,
     MaterialEditModal,
-    ProductDeleteModal,
+    MaterialDeleteModal,
     ProductReturnModal,
     CategoryCreateModal,
     SupplierCreateModal,
@@ -137,12 +136,12 @@ function (
                    $(td).attr('data-title', $("#material-material-list thead tr th:eq(10)").html());
                 }
             },
-            { 
-                "targets": [11],
-                'createdCell':  function (td, cellData, rowData, row, col) {
-                   $(td).attr('data-title', $("#material-material-list thead tr th:eq(11)").html());
-                }
-            },
+            // { 
+            //     "targets": [11],
+            //     'createdCell':  function (td, cellData, rowData, row, col) {
+            //        $(td).attr('data-title', $("#material-material-list thead tr th:eq(11)").html());
+            //     }
+            // },
             { 
                 "targets": [12],
                 'createdCell':  function (td, cellData, rowData, row, col) {
@@ -162,7 +161,7 @@ function (
             {data: "view_btn"},
             {data: "edit_btn"},
             {data: "purchase_btn"},
-            {data: "barcode_btn"},
+             {data: "barcode_btn"},
             {data: "delete_btn"}
         ],
         "footerCallback": function ( row, data, start, end, display ) {
@@ -332,7 +331,7 @@ function (
     $(document).delegate(".view-product", "click", function(e) {
         e.stopPropagation();
         e.preventDefault();
-        ProductViewModal(dt.DataTable().row($(this).closest("tr")).data());
+        MaterialViewModal(dt.DataTable().row($(this).closest("tr")).data());
     });
 
 
@@ -485,7 +484,7 @@ function (
     $(document).delegate(".product-delete", "click", function(e) {
         e.stopPropagation();
         e.preventDefault();
-        ProductDeleteModal(dt.DataTable().row($(this).closest("tr")).data());
+        MaterialDeleteModal(dt.DataTable().row($(this).closest("tr")).data());
     });
 
     // Delete all product

@@ -302,5 +302,4 @@ $(document).ready(function() {
 	storeApp.intiTinymce();
 });
 </script>
-
 <?php include ("footer.php"); ?>

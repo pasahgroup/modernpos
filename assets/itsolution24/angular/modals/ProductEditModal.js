@@ -16,7 +16,7 @@ window.angularApp.factory("ProductEditModal", ["API_URL", "window", "jQuery", "$
                         "</div>",
             controller: function ($scope, $uibModalInstance) {
                 $http({
-                  url: window.baseUrl + "/_inc/material.php?p_id=" + product.p_id + "&action_type=EDIT",
+                  url: window.baseUrl + "/_inc/product.php?p_id=" + product.p_id + "&action_type=EDIT",
                   method: "GET"
                 })
                 .then(function(response, status, headers, config) {

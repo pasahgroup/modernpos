@@ -7,8 +7,8 @@ window.angularApp.controller("MaterialPurchaseController", [
     "$uibModal",
     "$http",
     "$sce",
-    "ProductCreateModal",
-    "CustomerCreateModal",
+    "MaterialCreateModal",
+    "CustomerCreateModal",s
     "CustomerEditModal",
     "PurchasePaymentModal",
     "PurchaseInvoiceViewModal",
@@ -24,7 +24,7 @@ function (
     $uibModal,
     $http,
     $sce,
-    ProductCreateModal,
+    MaterialCreateModal,
     CustomerCreateModal,
     CustomerEditModal,
     PurchasePaymentModal,
@@ -223,7 +223,7 @@ function (
                     $(win.document.body)
                         .css( 'font-size', '10pt' )
                         .append(
-                            '<div><b><i>Powered by: pasah.com</i></b></div>'
+                            '<div><b><i>Powered by: pasah.net</i></b></div>'
                         )
                         .prepend(
                             '<div class="dt-print-heading"><img class="logo" src="'+window.logo+'"/><h2 class="title">'+window.store.name+'</h2><p>Printed on: '+window.formatDate(new Date())+'</p></div>'
@@ -292,7 +292,7 @@ function (
                     doc['footer']=(function(page, pages) {
                         return {
                             columns: [
-                                'Powered by PASAH.COM',
+                                'Powered by pasah.net',
                                 {
                                     // This is the right column
                                     alignment: 'right',
@@ -342,7 +342,7 @@ function (
         $scope.hideSupAddBtn = true;
         $scope.hideUnitAddBtn = true;
         $scope.hideTaxrateAddBtn = true;
-        ProductCreateModal($scope);
+        MaterialCreateModal($scope);
     });
 
     // Edit invoice
@@ -392,7 +392,7 @@ function (
             if (willDelete) {
                 $http({
                     method: "POST",
-                    url: API_URL + "/_inc/purchase.php",
+                    url: API_URL + "/_inc/material_purchase.php",
                     data: "invoice_id="+d.id+"&action_type=DELETE",
                     dataType: "JSON"
                 })
@@ -599,7 +599,7 @@ function (
                     itemTaxrate: names[10],
                     itemAvailable: names[11],
                 };
-                $scope.addProduct(data);
+                $scope.addMaterial(data);
             }, 
             open: function () {
                 $(".ui-autocomplete").perfectScrollbar();
@@ -721,7 +721,7 @@ function (
 
     // Add Product
     var purchasePrice = 0;
-    $scope.addProduct = function(data) {
+    $scope.addMaterial = function(data) {
         if (data.itemTaxMethod == 'exclusive') {
             purchasePrice = (parseFloat(data.itemPurchasePrice) * parseFloat(data.itemQuantity)) + parseFloat(data.itemTaxAmount);
         } else {
@@ -806,9 +806,6 @@ function (
 
 
     //--------------------------------------------------------------
-    //==============================================================
-    //--------------------------------------------------------------
-
 
         // Reset form
     $(document).delegate("#reset", "click", function (e) {

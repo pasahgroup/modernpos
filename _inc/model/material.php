@@ -76,8 +76,8 @@ class ModelMaterial extends Model
 		if (isset($data['image'])) {
 			$this->syncImage($product_id, $data['image']);
 		}
-		$this->updateStatus($product_id, $data['status']);
-		$this->updateSortOrder($product_id, $data['sort_order']);
+		$this->updateStatusMaterial($product_id, $data['status']);
+		$this->updateSortOrderMaterial($product_id, $data['sort_order']);
 
     	return $product_id;
 	}
@@ -94,14 +94,14 @@ class ModelMaterial extends Model
 		}
 	}
 
-	public function updateStatus($product_id, $status, $store_id = null) 
+	public function updateStatusMaterial($product_id, $status, $store_id = null) 
 	{
 		$store_id = $store_id ? $store_id : store_id();
 		$statement = $this->db->prepare("UPDATE `material_to_store` SET `status` = ? WHERE `store_id` = ? AND `product_id` = ?");
 		$statement->execute(array((int)$status, $store_id, $product_id));
 	}
 
-	public function updateSortOrder($product_id, $sort_order, $store_id = null) 
+	public function updateSortOrderMaterial($product_id, $sort_order, $store_id = null) 
 	{
 		$store_id = $store_id ? $store_id : store_id();
 		$statement = $this->db->prepare("UPDATE `material_to_store` SET `sort_order` = ? WHERE `store_id` = ? AND `product_id` = ?");
@@ -174,7 +174,6 @@ class ModelMaterial extends Model
 			    } 
 
 			//--- product to store ---//
-
 				$statement = $this->db->prepare("SELECT * FROM `material_to_store` WHERE `store_id` = ? AND `product_id` = ?");
 			    $statement->execute(array($store_id, $product_id));
 			    $product = $statement->fetch(PDO::FETCH_ASSOC);
@@ -230,8 +229,8 @@ class ModelMaterial extends Model
 		if (isset($data['image'])) {
 			$this->syncImage($product_id, $data['image']);
 		}
-		$this->updateStatus($product_id, $data['status']);
-		$this->updateSortOrder($product_id, $data['sort_order']);
+		$this->updateStatusMaterial($product_id, $data['status']);
+		$this->updateSortOrderMaterial($product_id, $data['sort_order']);
 
     	return $product_id;
 	}

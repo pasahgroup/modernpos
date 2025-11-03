@@ -221,7 +221,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
     $Hooks->do_action('After_Update_Product', $p_id);
 
     header('Content-Type: application/json');
-    echo json_encode(array('msg' => trans('text_product_updated'), 'id' => $p_id));
+    echo json_encode(array('msg' => trans('text_material_updated'), 'id' => $p_id));
     exit();
 
   } catch (Exception $e) { 
@@ -274,7 +274,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
     switch ($action_type) {
       case 'soft_delete':
 
-        $product_model->updateStatus($p_id, 0);
+        $product_model->updateStatusMaterial($p_id, 0);
         $message = trans('text_soft_delete');
 
         break;
@@ -285,12 +285,15 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
 
           $store_id = $the_store['store_id'];
           $stock_status = $product_model->isStockAvailable($p_id, $store_id);
+          
           if ($stock_status) {
-            throw new Exception("Oops!, Unbale to delete, Stock available in the " . store_field('name', $store_id));
+             throw new Exception("Oops!, Unabale to delete, Stock available in the " . store_field('name', $store_id));
+              //throw new Exception("Oops!, Unbale to delete, Stock available in the " .$belongs_stores. store_field('name', $store_id));
           }
         }
 
-        $product_model->deleteProduct($p_id); 
+      $product_model->deleteMaterial($p_id); 
+        // $product_model->deleteProduct($p_id); 
         $message = trans('text_delete');
 
         break;
@@ -323,7 +326,7 @@ if (isset($request->get['p_id']) AND isset($request->get['action_type']) && $req
 {
   $product = $product_model->getMaterial($request->get['p_id']);
   $preference = unserialize($product['preference']);
-  include 'template/product_form.php';
+  include 'template/material_form.php';
   exit();
 }
 
@@ -331,7 +334,7 @@ if (isset($request->get['p_id']) AND isset($request->get['action_type']) && $req
 if (isset($request->get['p_id']) AND isset($request->get['action_type']) && $request->get['action_type'] == 'DELETE') 
 {
   $product = $product_model->getMaterial($request->get['p_id']);
-  include 'template/product_del_form.php';
+  include 'template/material_del_form.php';
   exit();
 }
 
@@ -529,7 +532,7 @@ $columns = array(
     'db' => 'p_id',   
     'dt' => 'view_btn' ,
     'formatter' => function($d, $row) {
-      return '<a class="btn btn-sm btn-block btn-info" title="'.trans('button_view').'" href="product_details.php?p_id='.$row['p_id'].'"><i class="fa fa-eye"></i></a>';
+      return '<a class="btn btn-sm btn-block btn-info" title="'.trans('button_view').'" href="material_details.php?p_id='.$row['p_id'].'"><i class="fa fa-eye"></i></a>';
     }
   ),
   array( 

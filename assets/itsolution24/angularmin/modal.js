@@ -3518,7 +3518,13 @@ window.angularApp.factory("PrintReceiptModal", ["API_URL", "window", "jQuery", "
         $.get(window.baseUrl + '/_inc/print.php', {data: JSON.stringify(socket_data)});    
     };
 }]);
-window.angularApp.factory("ProductCreateModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "POSFilemanagerModal", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, POSFilemanagerModal, $scope) {
+
+
+
+
+
+
+window.angularApp.factory("MaterialCreateModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "POSFilemanagerModal", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, POSFilemanagerModal, $scope) {
     return function($scope) {
         var uibModalInstance = $uibModal.open({
             animation: true,
@@ -3533,11 +3539,11 @@ window.angularApp.factory("ProductCreateModal", ["API_URL", "window", "jQuery", 
                         "</div>",
             controller: function ($scope, $uibModalInstance) {
                 $http({
-                  url: window.baseUrl + "/_inc/product.php?action_type=CREATE",
+                  url: window.baseUrl + "/_inc/material.php?action_type=CREATE",
                   method: "GET"
                 })
                 .then(function(response, status, headers, config) {
-                    $scope.modal_title = "Create New Product";
+                    $scope.modal_title = "Create New Material";
                     $scope.rawHtml = $sce.trustAsHtml(response.data);
 
                     setTimeout(function() {
@@ -3663,6 +3669,156 @@ window.angularApp.factory("ProductCreateModal", ["API_URL", "window", "jQuery", 
         });
     };
 }]);
+
+
+
+window.angularApp.factory("ProductCreateModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "POSFilemanagerModal", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, POSFilemanagerModal, $scope) {
+    return function($scope) {
+        var uibModalInstance = $uibModal.open({
+            animation: true,
+            ariaLabelledBy: "modal-title",
+            ariaDescribedBy: "modal-body",
+            template: "<div class=\"modal-header\">" +
+                            "<button ng-click=\"closeProductCreateModal();\" type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" +
+                           "<h3 class=\"modal-title\" id=\"modal-title\"><span class=\"fa fa-fw fa-plus\"></span> {{ modal_title }}</h3>" +
+                        "</div>" +
+                        "<div class=\"modal-body\" id=\"modal-body\">" +
+                            "<div bind-html-compile=\"rawHtml\">Loading...</div>" +
+                        "</div>",
+            controller: function ($scope, $uibModalInstance) {
+                $http({
+                  url: window.baseUrl + "/_inc/product.php?action_type=CREATE",
+                  method: "GET"
+                })
+                .then(function(response, status, headers, config) {
+                    $scope.modal_title = "Create New Product 3";
+                    $scope.rawHtml = $sce.trustAsHtml(response.data);
+
+                    setTimeout(function() {
+                        window.storeApp.datePicker();
+                        window.storeApp.select2();
+
+                        // Generate random number
+                        $(".random_num").click(function(){
+                            $(this).parent(".input-group").children("input").val(window.storeApp.generateCardNo(8));
+                        });
+                        
+                    }, 500);
+
+                }, function(response) {
+                   window.swal("Oops!", response.data.errorMsg, "error");
+                });
+
+                // Submit Product Form
+                $(document).delegate("#create-product-submit", "click", function(e) {
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    var $tag = $(this);
+                    var $btn = $tag.button("loading");
+                    var form = $($tag.data("form"));
+                    form.find(".alert").remove();
+                    var actionUrl = form.attr("action");
+                    
+                    $http({
+                        url: window.baseUrl + "/_inc/" + actionUrl,
+                        method: "POST",
+                        data: form.serialize(),
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        dataType: "json"
+                    }).
+                    then(function(response) {
+                        $btn.button("reset");
+                        var alertMsg = "<div class=\"alert alert-success\">";
+                        alertMsg += "<p><i class=\"fa fa-check\"></i> " + response.data.msg + ".</p>";
+                        alertMsg += "</div>";
+                        form.find(".box-body").before(alertMsg);
+
+                        // Alert
+                        window.swal("Success", response.data.msg, "success")
+                        .then(function(value) {
+
+                            $scope.product = response.data.product;
+                            $scope.closeProductCreateModal();
+                            $(document).find(".close").trigger("click");
+
+                            // insert product into select2
+                            var select = $(document).find('#product_id');
+                            if (select.length) {
+                                var option = $('<option></option>').
+                                     attr('selected', true).
+                                     text(response.data.product.p_name).
+                                     val(response.data.id);
+                                option.appendTo(select);
+                                select.trigger('change');
+                            }
+
+                            // increase product count
+                            var productCount = $(document).find("#product-count h3");
+                            if (productCount) {
+                                productCount.text(parseInt(productCount.text()) + 1);
+                            }
+
+                            // Callback
+                            if ($scope.ProductCreateModalCallback) {
+                                $scope.ProductCreateModalCallback($scope);
+                            }
+
+                        });
+
+                    }, function(response) {
+                        $btn.button("reset");
+                        var alertMsg = "<div class=\"alert alert-danger\">";
+                        window.angular.forEach(response.data, function(value, key) {
+                            alertMsg += "<p><i class=\"fa fa-warning\"></i> " + value + ".</p>";
+                        });
+                        alertMsg += "</div>";
+                        form.find(".box-body").before(alertMsg);
+                        $(":input[type=\"button\"]").prop("disabled", false);
+                        window.swal("Oops!", response.data.errorMsg, "error");
+                    });
+                });
+
+                // Multiple image
+                $scope.imgArray = [];
+                $scope.imgSerial = 0;
+                $scope.addImageItem = function() {
+                    $scope.imgSerial++;
+                    var item = {
+                        'id' : $scope.imgSerial,
+                        'url' : '',
+                        'sort_order' : $scope.imgSerial,
+                    };
+                    $scope.imgArray.push(item);
+                };
+                $(document).delegate(".open-filemanager", "click", function(e) {
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var id = $(this).data('imageid');
+                    POSFilemanagerModal({target:'image'+id, thumb:'thumb'+id});
+                });
+
+                $scope.closeProductCreateModal = function () {
+                    $uibModalInstance.dismiss("cancel");
+                };
+            },
+            scope: $scope,
+            size: "md",
+            backdrop  : "static",
+            keyboard: true,
+        });
+
+        uibModalInstance.result.catch(function () { 
+            uibModalInstance.close(); 
+        });
+    };
+}]);
+
+
 window.angularApp.factory("ProductDeleteModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, $scope) {
     return function(product) {
         var uibModalInstance = $uibModal.open({
@@ -3762,6 +3918,105 @@ window.angularApp.factory("ProductDeleteModal", ["API_URL", "window", "jQuery", 
 
 
 
+window.angularApp.factory("MaterialDeleteModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, $scope) {
+    return function(material) {
+        var uibModalInstance = $uibModal.open({
+            animation: true,
+            ariaLabelledBy: "modal-title",
+            ariaDescribedBy: "modal-body",
+            template: "<div class=\"modal-header\">" +
+                            "<button ng-click=\"closeProductDeleteModal();\" type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" +
+                           "<h3 class=\"modal-title\" id=\"modal-title\"><span class=\"fa fa-fw fa-delete\"></span> {{ modal_title }}</h3>" +
+                        "</div>" +
+                        "<div class=\"modal-body\" id=\"modal-body\">" +
+                            "<div bind-html-compile=\"rawHtml\">Loading...</div>" +
+                        "</div>",
+            controller: function ($scope, $uibModalInstance) {
+                $http({
+                  url: window.baseUrl + "/_inc/material.php?p_id=" + material.p_id + "&action_type=DELETE",
+                  method: "GET"
+                })
+                .then(function(response, status, headers, config) {
+                    $scope.modal_title = material.p_name;
+                    $scope.rawHtml = $sce.trustAsHtml(response.data);
+
+                }, function(data) {
+                   window.swal("Oops!", "an error occured!", "error");
+                });
+
+                // Submit product delete form
+                $(document).delegate("#material-delete-submit", "click", function(e) {
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    var $tag = $(this);
+                    var $btn = $tag.button("loading");
+                    var form = $($tag.data("form"));
+                    form.find(".alert").remove();
+                    var actionUrl = form.attr("action");
+                    
+                    $http({
+                        url: window.baseUrl + "/_inc/" + actionUrl,
+                        method: "POST",
+                        data: form.serialize(),
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        dataType: "json"
+                    }).
+                    then(function(response) {
+
+                        $btn.button("reset");
+                        var alertMsg = "<div class=\"alert alert-success\">";
+                        alertMsg += "<p><i class=\"fa fa-check\"></i> " + response.data.msg + "</p>";
+                        alertMsg += "</div>";
+                        form.find(".box-body").before(alertMsg);
+                        $("#material-material-list").DataTable().ajax.reload( null, false);
+                        if (response.data.action_type == "soft_delete") {
+                            $("#total-trash").text(parseInt($("#total-trash").text())+1);
+                        }
+
+                        // Alert
+                        window.swal("Success", response.data.msg, "success")
+                        .then(function(value) {
+                            $scope.closeProductDeleteModal();
+                            $(document).find(".close").trigger("click");
+                        });
+
+                    }, function(response) {
+
+                        $btn.button("reset");
+                        var alertMsg = "<div class=\"alert alert-danger\">";
+                        window.angular.forEach(response.data, function(value) {
+                            alertMsg += "<p><i class=\"fa fa-warning\"></i> " + value + ".</p>";
+                        });
+                        alertMsg += "</div>";
+                        form.find(".box-body").before(alertMsg);
+                        $(":input[type=\"button\"]").prop("disabled", false);
+                        window.swal("Oops!", response.data.errorMsg, "error");
+                    });
+                });
+
+                $scope.closeProductDeleteModal = function () {
+                    $uibModalInstance.dismiss("cancel");
+                };
+            },
+            scope: $scope,
+            size: "md",
+            backdrop  : "static",
+            keyboard: true,
+        });
+
+        uibModalInstance.result.catch(function () { 
+            uibModalInstance.close(); 
+        });
+    };
+}]);
+
+
+
+
 
 window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "POSFilemanagerModal", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, POSFilemanagerModal, $scope) {
     return function(material) {
@@ -3773,7 +4028,7 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
             ariaLabelledBy: "modal-title",
             ariaDescribedBy: "modal-body",
             template: "<div class=\"modal-header\">" +
-                            "<button ng-click=\"closeProductEditModal();\" type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" +
+                            "<button ng-click=\"closeMaterialEditModal();\" type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" +
                            "<h3 class=\"modal-title\" id=\"modal-title\"><span class=\"fa fa-fw fa-pencil\"></span> {{ modal_title }}</h3>" +
                         "</div>" +
                         "<div class=\"modal-body\" id=\"modal-body\">" +
@@ -3891,14 +4146,14 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
                             if (willDelete) {
 
                                 // close modalwindow
-                                $scope.closeProductEditModal();
+                                $scope.closeMaterialEditModal();
                                 $(document).find(".close").trigger("click");
                                 $("body").removeClass("modal-open");
 
                                 productId = response.data.id;
                                 
-                                if ($("#product-product-list").length) {
-                                   $("#product-product-list").DataTable().ajax.reload(function(json) {
+                                if ($("#material-material-list").length) {
+                                   $("#material-material-list").DataTable().ajax.reload(function(json) {
                                         if ($("#row_"+productId).length) {
                                             $("#row_"+productId).flash("yellow", 5000);
                                         }
@@ -3907,8 +4162,8 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
 
                             } else {
 
-                                if ($("#product-product-list").length) {
-                                    $("#product-product-list").DataTable().ajax.reload(null, false);
+                                if ($("#material-material-list").length) {
+                                    $("#material-material-list").DataTable().ajax.reload(null, false);
                                 }
                             }
                         });
@@ -3944,7 +4199,7 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
                 });
                 
                 // Close modal
-                $scope.closeProductEditModal = function () {
+                $scope.closeMaterialEditModal = function () {
                     $uibModalInstance.dismiss("cancel");
                 };
 
@@ -4000,6 +4255,7 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
         });
     };
 }]);
+
 
 
 
@@ -4358,6 +4614,7 @@ window.angularApp.factory("ProductReturnModal", ["API_URL", "window", "jQuery", 
         });
     };
 }]);
+
 window.angularApp.factory("ProductViewModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, $scope) {
     return function(product) {
        var uibModalInstance = $uibModal.open({
@@ -4403,6 +4660,55 @@ window.angularApp.factory("ProductViewModal", ["API_URL", "window", "jQuery", "$
 
     };
 }]);
+
+
+window.angularApp.factory("MaterialViewModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, $scope) {
+    return function(material) {
+       var uibModalInstance = $uibModal.open({
+            animation: true,
+            ariaLabelledBy: "modal-title",
+            ariaDescribedBy: "modal-body",
+            template: "<div class=\"modal-header\">" +
+                            "<button ng-click=\"closeProductViewModal();\" type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" +
+                           "<h3 class=\"modal-title\" id=\"modal-title\"><span class=\"fa fa-fw fa-eye\"></span> {{ modal_title }}</h3>" +
+                        "</div>" +
+                        "<div class=\"modal-body\" id=\"modal-body\">" +
+                            "<div bind-html-compile=\"rawHtml\">Loading...</div>" +
+                        "</div>",
+            controller: function ($scope, $uibModalInstance) {
+                $http({
+                  url: window.baseUrl + "/_inc/material.php?p_id=" + material.p_id + "&action_type=VIEW",
+                  method: "GET"
+                })
+                .then(function(response, status, headers, config) {
+                    $scope.modal_title = material.p_name;
+                    $scope.rawHtml = $sce.trustAsHtml(response.data);
+                }, function(response) {
+                    window.swal("Oops!", response.data.errorMsg, "error")
+                    .then(function() {
+                        $scope.closeProductViewModal();
+                    });
+                });
+
+                // Close modal
+                $scope.closeProductViewModal = function () {
+                    $uibModalInstance.dismiss("cancel");
+                };
+            },
+            scope: $scope,
+            size: "md",
+            backdrop  : "static",
+            keyboard: true,
+        });
+
+        uibModalInstance.result.catch(function () { 
+            uibModalInstance.close(); 
+        });
+
+    };
+}]);
+
+
 window.angularApp.factory("StoreDeleteModal", ["API_URL", "window", "jQuery", "$http", "$uibModal", "$sce", "$rootScope", function (API_URL, window, $, $http, $uibModal, $sce, $scope) {
     return function(store) {
         var uibModalInstance = $uibModal.open({

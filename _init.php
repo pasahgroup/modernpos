@@ -150,6 +150,8 @@ require_once DIR_HELPER . 'quotation.php';
 require_once DIR_HELPER . 'purchase.php';
 require_once DIR_HELPER . 'pmethod.php';
 
+require_once DIR_HELPER . 'material_purchase.php';
+
 require_once DIR_HELPER . 'product.php';
 require_once DIR_HELPER . 'material.php';
 

@@ -126,8 +126,7 @@ function validate_existance($request, $p_id = 0)
 
 // Check product code
 function validate_product_code($request, $p_id = NULL)
-{
-  
+{  
 
   if ($p_id) {
     $statement = db()->prepare("SELECT * FROM `products` WHERE `p_code` = ? AND `p_id` != ?");

@@ -227,6 +227,14 @@ function total_out_of_stock()
 	return $report_model->totalOutOfStock();
 }
 
+
+function total_out_of_stock_material()
+{	
+	$report_model = registry()->get('loader')->model('report');
+	return $report_model->totalOutOfStockMaterial();
+}
+
+
 function total_expired()
 {	
 	$report_model = registry()->get('loader')->model('report');
@@ -235,7 +243,6 @@ function total_expired()
 
 function get_balance($customer_id, $index = null) 
 {	
-	
 
 	$customer_model = registry()->get('loader')->model('customer');
 	return $customer_model->getBalance($customer_id, $index);

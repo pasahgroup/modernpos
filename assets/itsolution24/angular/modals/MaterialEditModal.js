@@ -8,7 +8,7 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
             ariaLabelledBy: "modal-title",
             ariaDescribedBy: "modal-body",
             template: "<div class=\"modal-header\">" +
-                            "<button ng-click=\"closeProductEditModal();\" type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" +
+                            "<button ng-click=\"closeMaterialEditModal();\" type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" +
                            "<h3 class=\"modal-title\" id=\"modal-title\"><span class=\"fa fa-fw fa-pencil\"></span> {{ modal_title }}</h3>" +
                         "</div>" +
                         "<div class=\"modal-body\" id=\"modal-body\">" +
@@ -61,8 +61,6 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
                         }
                         
                     }, 500);
-
-
 
                 }, function(data) {
                    window.swal("Oops!", "an error occured!", "error");
@@ -126,14 +124,14 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
                             if (willDelete) {
 
                                 // close modalwindow
-                                $scope.closeProductEditModal();
+                                $scope.closeMaterialEditModal();
                                 $(document).find(".close").trigger("click");
                                 $("body").removeClass("modal-open");
 
                                 productId = response.data.id;
                                 
-                                if ($("#product-product-list").length) {
-                                   $("#product-product-list").DataTable().ajax.reload(function(json) {
+                                if ($("#material-material-list").length) {
+                                   $("#material-material-list").DataTable().ajax.reload(function(json) {
                                         if ($("#row_"+productId).length) {
                                             $("#row_"+productId).flash("yellow", 5000);
                                         }
@@ -142,8 +140,8 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
 
                             } else {
 
-                                if ($("#product-product-list").length) {
-                                    $("#product-product-list").DataTable().ajax.reload(null, false);
+                                if ($("#material-material-list").length) {
+                                    $("#material-material-list").DataTable().ajax.reload(null, false);
                                 }
                             }
                         });
@@ -179,7 +177,7 @@ window.angularApp.factory("MaterialEditModal", ["API_URL", "window", "jQuery", "
                 });
                 
                 // Close modal
-                $scope.closeProductEditModal = function () {
+                $scope.closeMaterialEditModal = function () {
                     $uibModalInstance.dismiss("cancel");
                 };
 
