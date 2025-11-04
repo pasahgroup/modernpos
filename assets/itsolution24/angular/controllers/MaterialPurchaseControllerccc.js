@@ -8,7 +8,7 @@ window.angularApp.controller("MaterialPurchaseController", [
     "$http",
     "$sce",
     "MaterialCreateModal",
-    "CustomerCreateModal",
+    "CustomerCreateModal",s
     "CustomerEditModal",
     "PurchasePaymentModal",
     "PurchaseInvoiceViewModal",
@@ -223,7 +223,7 @@ function (
                     $(win.document.body)
                         .css( 'font-size', '10pt' )
                         .append(
-                            '<div><b><i>Powered by: pasah.com</i></b></div>'
+                            '<div><b><i>Powered by: pasah.net</i></b></div>'
                         )
                         .prepend(
                             '<div class="dt-print-heading"><img class="logo" src="'+window.logo+'"/><h2 class="title">'+window.store.name+'</h2><p>Printed on: '+window.formatDate(new Date())+'</p></div>'
@@ -292,7 +292,7 @@ function (
                     doc['footer']=(function(page, pages) {
                         return {
                             columns: [
-                                'Powered by PASAH.COM',
+                                'Powered by pasah.net',
                                 {
                                     // This is the right column
                                     alignment: 'right',
@@ -326,7 +326,6 @@ function (
     //================
     // End datatable
     //================
-
 
 
     // Add Product
@@ -552,16 +551,13 @@ function (
         var $this = $(this);
         $this.attr('autocomplete', 'off');
         var type = $this.data("type");
-
-//alert(baseUrl);
-
         var autoTypeNo; 
         if(type =="p_id" ) autoTypeNo = 0;
         if(type =="p_name" ) autoTypeNo = 1;
         $this.autocomplete({
             source: function (request, response) {
                 return $http({
-                    url: window.baseUrl + "/_inc/ajax.php?type=MATERIALPURCHASEITEM",
+                    url: window.baseUrl + "/_inc/ajax.php?type=PURCHASEITEM",
                     dataType: "json",
                     method: "post",
                     data: $.param({
@@ -809,9 +805,6 @@ function (
 
 
     //--------------------------------------------------------------
-    //==============================================================
-    //--------------------------------------------------------------
-
 
         // Reset form
     $(document).delegate("#reset", "click", function (e) {

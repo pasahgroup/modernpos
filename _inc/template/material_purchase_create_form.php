@@ -82,9 +82,9 @@
             <div class="input-group-addon paddinglr-10">
               <i class="fa fa-barcode addIcon fa-2x"></i>
             </div>
-            <input type="text" name="add_item" value="" class="form-control input-lg autocomplete-product" id="add_item" data-type="p_name" onkeypress="return event.keyCode != 13;" onclick="this.select();" placeholder="<?php echo trans('placeholder_search_product'); ?>" autocomplete="off" tabindex="1">
+            <input type="text" name="add_item" value="" class="form-control input-lg autocomplete-product" id="add_item" data-type="p_name" onkeypress="return event.keyCode != 13;" onclick="this.select();" placeholder="<?php echo trans('placeholder_search_material'); ?>" autocomplete="off" tabindex="1">
             <div class="input-group-addon paddinglr-10">
-              <a id="add_new_product" href="material.php">
+              <a id="add_new_product" href="material_purchase.php">
                 <i class="fa fa-plus-circle addIcon fa-2x" id="addIcon"></i>
               </a>
             </div>

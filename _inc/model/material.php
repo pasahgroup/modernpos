@@ -337,8 +337,7 @@ class ModelMaterial extends Model
 	    	$taxrate = get_the_taxrate($product['taxrate_id']);
 	    	$product['taxrate'] = $taxrate;
 	    	$product['purchase_tax_amount'] = ($taxrate['taxrate'] / 100) * $product['purchase_price'];
-	    }
-	    
+	    }	    
 	    return $product;
 	}
 

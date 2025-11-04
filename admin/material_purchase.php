@@ -14,10 +14,10 @@ if (user_group_id() != 1 && !has_permission('access', 'read_purchase_list')) {
 }
 
 // Set Document Title
-$document->setTitle(trans('title_purchase'));
+$document->setTitle(trans('title_material_purchase'));
 
 // Add Script
-$document->addScript('../assets/itsolution24/angular/controllers/PurchaseController.js');
+$document->addScript('../assets/itsolution24/angular/controllers/MaterialPurchaseController.js');
 
 // ADD BODY CLASS
 $document->setBodyClass('sidebar-collapse');
@@ -28,7 +28,7 @@ include ("left_sidebar.php") ;
 ?>
 
 <!-- Content Wrapper Start -->
-<div class="content-wrapper" ng-controller="PurchaseController">
+<div class="content-wrapper" ng-controller="MaterialPurchaseController">
 
   <!-- Content Header Start -->
   <section class="content-header">
@@ -87,10 +87,7 @@ include ("left_sidebar.php") ;
         </div>
 
         <!-- Add Purchase Create Form -->
-        {{--
-  <?php include('../_inc/template/purchase_create_form.php'); ?>
-        --}}
-        <?php include('../_inc/template/material_purchase_create_form.php'); ?>
+               <?php include('../_inc/template/material_purchase_create_form.php'); ?>
         
       </div>
     <?php endif; ?>

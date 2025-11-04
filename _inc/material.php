@@ -170,7 +170,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
     $Hooks->do_action('After_Create_Product', $product);
 
     header('Content-Type: application/json');
-    echo json_encode(array('msg' => trans('text_product_created'), 'id' => $product_id, 'product' => $product));
+    echo json_encode(array('msg' => trans('text_material_created'), 'id' => $product_id, 'product' => $product));
     exit();
 
   } catch (Exception $e) {
@@ -317,7 +317,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
 // Product create form
 if (isset($request->get['action_type']) && $request->get['action_type'] == 'CREATE') 
 {
-  include 'template/product_create_form.php';
+  include 'template/material_create_form.php';
   exit();
 }
 

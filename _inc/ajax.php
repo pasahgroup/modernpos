@@ -170,6 +170,47 @@ if($request->server['REQUEST_METHOD'] == 'POST' AND $request->get['type'] == 'UP
 	}
 }
 
+if($request->server['REQUEST_METHOD'] == 'POST' AND $request->get['type'] == 'MATERIALPURCHASEITEM') 
+{
+	$sup_id = isset($request->post['sup_id']) ? $request->post['sup_id'] : null;
+	$type = $request->post['type'];
+	$name = $request->post['name_starts_with'];
+	$query = "SELECT `p_id`, `p_name`, `p_code`, `category_id`, `unit_id`, `p2s`.`tax_method`, `p2s`.`purchase_price`, `p2s`.`sell_price`, `p2s`.`quantity_in_stock` 
+		FROM `materials` 
+		LEFT JOIN `material_to_store` p2s ON (`materials`.`p_id` = `p2s`.`product_id`)
+		WHERE `p2s`.`store_id` = ? AND `p2s`.`status` = ? AND `p_type` != 'service'";
+	if ($sup_id) {
+		$query .= " AND `p2s`.`sup_id` = ?";
+	}
+	$query .= " AND (UPPER($type) LIKE '" . strtoupper($name) . "%' OR `p_code` = '{$name}') ORDER BY `p_id` DESC LIMIT 10";
+	$statement = db()->prepare($query);
+	if ($sup_id) {
+		$statement->execute(array(store_id(), 1, $sup_id));
+	} else {
+		$statement->execute(array(store_id(), 1));
+	}
+	$products = $statement->fetchAll(PDO::FETCH_ASSOC);
+	$data = array();
+    foreach ($products as $product) {
+    	$purchase_price = $product['purchase_price'];
+    	$sell_price = $product['sell_price'];
+    	$tax_amount = 0;
+    	$tax_method = $product['tax_method'] ? $product['tax_method'] : 'exclusive';
+    	$taxrate = 0;
+    	$product_info = get_the_material($product['p_id']);
+    	if ($product_info && $product_info['taxrate']) {
+    		$taxrate = $product_info['taxrate']['taxrate'];
+    		$tax_amount = ($product_info['taxrate']['taxrate'] / 100 ) * $purchase_price;
+    	}
+		$name = $product['p_id'].'|'.$product['p_name'].'|'.$product['p_code'].'|'.$product['category_id'].'|'.$product['quantity_in_stock'].'|'.get_the_unit($product['unit_id'],'unit_name').'|'.$purchase_price .'|'.$sell_price.'|'.$tax_amount.'|'.$tax_method.'|'.$taxrate.'|'.$product['quantity_in_stock'];
+		array_push($data, $name);
+    }
+	echo json_encode($data);
+	exit();
+}
+
+
+
 if($request->server['REQUEST_METHOD'] == 'POST' AND $request->get['type'] == 'PURCHASEITEM') 
 {
 	$sup_id = isset($request->post['sup_id']) ? $request->post['sup_id'] : null;
@@ -208,6 +249,18 @@ if($request->server['REQUEST_METHOD'] == 'POST' AND $request->get['type'] == 'PU
 	echo json_encode($data);
 	exit();
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Product list
 if($request->server['REQUEST_METHOD'] == 'POST' AND $request->get['type'] == 'SELLINGITEM') 
