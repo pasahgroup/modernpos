@@ -251,17 +251,6 @@ if($request->server['REQUEST_METHOD'] == 'POST' AND $request->get['type'] == 'PU
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
 // Product list
 if($request->server['REQUEST_METHOD'] == 'POST' AND $request->get['type'] == 'SELLINGITEM') 
 {

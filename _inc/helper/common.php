@@ -304,6 +304,30 @@ function date_range_filter2($from, $to)
 	return $where_query;
 }
 
+
+function date_range_filter3($from, $to)
+{
+	$from = $from ? $from : date('Y-m-d');
+	$to = $to ? $to : date('Y-m-d');
+	$where_query = '';
+	if (($from && ($to == false)) || ($from == $to)) {
+		$day = date('d', strtotime($from));
+		$month = date('m', strtotime($from));
+		$year = date('Y', strtotime($from));
+		$where_query .= " AND DAY(`material_purchase_info`.`created_at`) = {$day}";
+		$where_query .= " AND MONTH(`material_purchase_info`.`created_at`) = {$month}";
+		$where_query .= " AND YEAR(`material_purchase_info`.`created_at`) = {$year}";
+	} else {
+		$from = date('Y-m-d H:i:s', strtotime($from.' '. '00:00:00')); 
+		$to = date('Y-m-d H:i:s', strtotime($to.' '. '23:59:59'));
+		$where_query .= " AND material_purchase_info.created_at >= '{$from}' AND material_purchase_info.created_at <= '{$to}'";
+	}
+	return $where_query;
+}
+
+
+
+
 function date_range_item_filter($from, $to)
 {
 	$from = $from ? $from : date('Y-m-d');

@@ -314,7 +314,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
   }
 }
 
-// Product create form
+// Material create form
 if (isset($request->get['action_type']) && $request->get['action_type'] == 'CREATE') 
 {
   include 'template/material_create_form.php';

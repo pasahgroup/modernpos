@@ -25,16 +25,30 @@ class ModelMaterial_Purchase extends Model
 		return $statement->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function getInvoiceInfo($invoice_id, $store_id = null) 
+	// public function getInvoiceMaterialInfo($invoice_id, $store_id = null) 
+	// {
+	// 	$store_id = $store_id ? $store_id : store_id();
+	// 	$statement = $this->db->prepare("SELECT `material_purchase_info`.*, `material_purchase_price`.*, `suppliers`.`sup_id`, `suppliers`.`sup_name`, `suppliers`.`sup_mobile` AS `mobile_number`, `suppliers`.`sup_email` FROM `material_purchase_info` 
+	// 		LEFT JOIN `material_purchase_price` ON `material_purchase_info`.`invoice_id` = `material_purchase_price`.`invoice_id` 
+	// 		LEFT JOIN `suppliers` ON `material_purchase_info`.`sup_id` = `suppliers`.`sup_id` 
+	// 		WHERE `material_purchase_info`.`store_id` = ? AND (`material_purchase_info`.`invoice_id` = ? OR (`material_purchase_info`.`sup_id` = ?) AND `material_purchase_info`.`inv_type` IN ('purchase','transfer')) ORDER BY `material_purchase_info`.`invoice_id` DESC");
+	// 	$statement->execute(array($store_id, $invoice_id, $invoice_id));
+	// 	return $statement->fetch(PDO::FETCH_ASSOC);
+	// }
+
+
+		public function getInvoiceInfo($invoice_id, $store_id = null) 
 	{
 		$store_id = $store_id ? $store_id : store_id();
-		$statement = $this->db->prepare("SELECT `material_purchase_info`.*, `material_purchase_price`.*, `suppliers`.`sup_id`, `suppliers`.`sup_name`, `suppliers`.`sup_mobile` AS `mobile_number`, `suppliers`.`sup_email` FROM `material_purchase_info` 
-			LEFT JOIN `material_purchase_price` ON `material_purchase_info`.`invoice_id` = `material_purchase_price`.`invoice_id` 
-			LEFT JOIN `suppliers` ON `material_purchase_info`.`sup_id` = `suppliers`.`sup_id` 
-			WHERE `material_purchase_info`.`store_id` = ? AND (`material_purchase_info`.`invoice_id` = ? OR (`material_purchase_info`.`sup_id` = ?) AND `material_purchase_info`.`inv_type` IN ('purchase','transfer')) ORDER BY `material_purchase_info`.`invoice_id` DESC");
+		$statement = $this->db->prepare("SELECT `purchase_info`.*, `purchase_price`.*, `suppliers`.`sup_id`, `suppliers`.`sup_name`, `suppliers`.`sup_mobile` AS `mobile_number`, `suppliers`.`sup_email` FROM `purchase_info` 
+			LEFT JOIN `purchase_price` ON `purchase_info`.`invoice_id` = `purchase_price`.`invoice_id` 
+			LEFT JOIN `suppliers` ON `purchase_info`.`sup_id` = `suppliers`.`sup_id` 
+			WHERE `purchase_info`.`store_id` = ? AND (`purchase_info`.`invoice_id` = ? OR (`purchase_info`.`sup_id` = ?) AND `purchase_info`.`inv_type` IN ('purchase','transfer')) ORDER BY `purchase_info`.`invoice_id` DESC");
 		$statement->execute(array($store_id, $invoice_id, $invoice_id));
 		return $statement->fetch(PDO::FETCH_ASSOC);
 	}
+
+
 
 	public function getInvoiceItems($invoice_id, $store_id = null) 
 	{
@@ -46,7 +60,7 @@ class ModelMaterial_Purchase extends Model
 		$i = 0;
 		foreach ($rows as $row) {
 			$array[$i] = $row;
-			$array[$i]['unitName'] = get_the_unit(get_the_product($row['item_id'])['unit_id'],'unit_name');
+			$array[$i]['unitName'] = get_the_unit(get_the_material($row['item_id'])['unit_id'],'unit_name');
 			$i++;
 		}
 		return $array;
@@ -75,7 +89,7 @@ class ModelMaterial_Purchase extends Model
             $html .= '<tr class="bg-success">';
             $html .= '<td class="text-center" style="padding:0 2px;">' . $row['item_name'] . '</td>';
             $html .= '<td class="text-right" style="padding:0 2px;">' . currency_format($row['item_price']) . '</td>';
-            $html .= '<td class="text-center" style="padding:0 2px;">' . currency_format($row['item_quantity']) . ' ' . get_the_unit(get_the_product($row['item_id'])['unit_id'], 'unit_name') . '</td>';
+            $html .= '<td class="text-center" style="padding:0 2px;">' . currency_format($row['item_quantity']) . ' ' . get_the_unit(get_the_material($row['item_id'])['unit_id'], 'unit_name') . '</td>';
             $html .= '<td class="text-right" style="padding:0 2px;">' . currency_format($row['item_total']) . '</td>';
             $html .= '</tr>';
             $sell += $row['item_price'];

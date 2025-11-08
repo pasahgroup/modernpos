@@ -260,7 +260,7 @@ class ModelMaterial extends Model
 		 foreach ($purchase_items as $purchase_item) {
 
 	        if (isset($purchase_item['invoice_id'])) {
-	          $statement = $this->db->prepare("DELETE FROM `purchase_info` WHERE `invoice_id` = ?");
+	          $statement = $this->db->prepare("DELETE FROM `material_purchase_info` WHERE `invoice_id` = ?");
 	          $statement->execute(array($purchase_item['invoice_id']));
 	          $statement = $this->db->prepare("DELETE FROM `purchase_price` WHERE `invoice_id` = ?");
 	          $statement->execute(array($purchase_item['invoice_id']));
@@ -504,12 +504,12 @@ class ModelMaterial extends Model
 	{
 		$store_id = $store_id ? $store_id : store_id();
 
-		$where_query = "`purchase_info`.`inv_type` != 'others' AND `purchase_item`.`item_id` = ? AND `purchase_item`.`store_id` = ?";
+		$where_query = "`material_purchase_info`.`inv_type` != 'others' AND `purchase_item`.`item_id` = ? AND `purchase_item`.`store_id` = ?";
 		$where_query .= date_range_filter2($from, $to);
 
-		$statement = $this->db->prepare("SELECT SUM(`purchase_price`.`paid_amount`) as total FROM `purchase_info` 
-			LEFT JOIN `purchase_item` ON (`purchase_info`.`invoice_id` = `purchase_item`.`invoice_id`) 
-			LEFT JOIN `purchase_price` ON (`purchase_info`.`invoice_id` = `purchase_price`.`invoice_id`) 
+		$statement = $this->db->prepare("SELECT SUM(`purchase_price`.`paid_amount`) as total FROM `material_purchase_info` 
+			LEFT JOIN `purchase_item` ON (`material_purchase_info`.`invoice_id` = `purchase_item`.`invoice_id`) 
+			LEFT JOIN `purchase_price` ON (`material_purchase_info`.`invoice_id` = `purchase_price`.`invoice_id`) 
 			WHERE $where_query");
 		$statement->execute(array($item_id, $store_id));
 		$purchase_price = $statement->fetch(PDO::FETCH_ASSOC);

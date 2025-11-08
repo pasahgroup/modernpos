@@ -48,7 +48,7 @@ include ("left_sidebar.php") ;
       </li>
       <li>
         <?php if (isset($request->get['box_state']) && $request->get['box_state']=='open'): ?>
-          <a href="purchase.php"><?php echo trans('text_purchase_title'); ?></a>  
+          <a href="material_purchase.php"><?php echo trans('text_purchase_title'); ?></a>  
         <?php else: ?>
           <?php echo trans('text_purchase_title'); ?>  
         <?php endif; ?>
@@ -79,7 +79,7 @@ include ("left_sidebar.php") ;
       <div class="box box-info<?php echo create_box_state(); ?>">
         <div class="box-header with-border">
           <h3 class="box-title">
-            <span class="fa fa-fw fa-plus"></span> <?php echo trans('text_new_purchase_title'); ?>
+            <span class="fa fa-fw fa-plus"></span> <?php echo trans('text_new_material_purchase_title'); ?>
           </h3>
           <button type="button" class="btn btn-box-tool add-new-btn" data-widget="collapse" data-collapse="true">
             <i class="fa <?php echo !create_box_state() ? 'fa-minus' : 'fa-plus'; ?>"></i>
@@ -145,9 +145,9 @@ include ("left_sidebar.php") ;
               </div>
           </div>
           </div>
-          <div class='box-body'>     
+          <div class='box-body'>   
             
-            <div class="table-responsive"> 
+          <div class="table-responsive"> 
               <?php
               $hide_colums = "";
               if (user_group_id() != 1) {

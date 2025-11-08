@@ -133,8 +133,8 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
     foreach ($request->post['products'] as $product) 
     {  
         $id = $product['item_id'];
-        $statement = db()->prepare("SELECT * FROM `products`
-            LEFT JOIN `product_to_store` p2s ON (`products`.`p_id` = `p2s`.`product_id`) 
+        $statement = db()->prepare("SELECT * FROM `materials`
+            LEFT JOIN `material_to_store` p2s ON (`materials`.`p_id` = `p2s`.`product_id`) 
             WHERE `p2s`.`store_id` = ? AND `p_id` = ?");
         $statement->execute(array($store_id, $id));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
@@ -147,7 +147,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
           throw new Exception(trans('error_quantity'));
         }
 
-        // Validate purchase purchase_price
+        // Validate purchase material_purchase_price
         if(!validateFloat($product['purchase_price']) || $product['purchase_price'] <= 0) {
           throw new Exception(trans('error_purchase_price'));
         }
@@ -198,7 +198,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
     $total_paid = $paid_amount;
 
     // Check for dublicate, if present then update otherwise insert
-    $statement = db()->prepare("SELECT * FROM `purchase_info` WHERE `invoice_id` = ?");
+    $statement = db()->prepare("SELECT * FROM `material_purchase_info` WHERE `invoice_id` = ?");
     $statement->execute(array($invoice_id));
     $result = $statement->fetch(PDO::FETCH_ASSOC);
     if ($result) {
@@ -248,16 +248,16 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
         }
         
         // Insert purchase item
-        $statement = db()->prepare("INSERT INTO `purchase_item` (invoice_id, store_id, item_id, category_id, brand_id, item_name, item_purchase_price, item_selling_price, item_quantity, status, item_total, item_tax, tax_method, tax, gst, cgst, sgst, igst) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $statement = db()->prepare("INSERT INTO `material_purchase_item` (invoice_id, store_id, item_id, category_id, brand_id, item_name, item_purchase_price, item_selling_price, item_quantity, status, item_total, item_tax, tax_method, tax, gst, cgst, sgst, igst) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $statement->execute(array($invoice_id, $store_id, $id, $category_id, $brand_id, $item_name, $item_purchase_price, $item_selling_price, $item_quantity, $status, $item_total, $item_tax, $tax_method, $taxrate, $taxrate, $cgst, $sgst, $igst));
         
         // Update stock quantity
-        $statement = db()->prepare("UPDATE `product_to_store` SET `purchase_price` = ?, `sell_price` = ?, `quantity_in_stock` = `quantity_in_stock` + $item_quantity WHERE `product_id` = ? AND `store_id` = ?");
+        $statement = db()->prepare("UPDATE `material_to_store` SET `material_purchase_price` = ?, `sell_price` = ?, `quantity_in_stock` = `quantity_in_stock` + $item_quantity WHERE `product_id` = ? AND `store_id` = ?");
         $statement->execute(array($item_purchase_price, $item_selling_price, $id, $store_id));
     }
 
     // Insert purchase info
-    $statement = db()->prepare("INSERT INTO `purchase_info` (invoice_id, store_id, sup_id, total_item, purchase_note, attachment, shipping_status, created_by, purchase_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $statement = db()->prepare("INSERT INTO `material_purchase_info` (invoice_id, store_id, sup_id, total_item, purchase_note, attachment, shipping_status, created_by, purchase_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $statement->execute(array($invoice_id, $store_id, $sup_id, $total_item, $purchase_note, $attachment, $shipping_status, $user_id, $purchase_date, $created_at));
 
     if ($supplier_info['sup_state'] == get_preference('business_state')) {
@@ -268,7 +268,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
     }
 
     // Insert Price
-    $statement = db()->prepare("INSERT INTO `purchase_price` (invoice_id, store_id, subtotal, discount_type, discount_amount, shipping_type, shipping_amount, others_charge, item_tax, order_tax, cgst, sgst, igst, payable_amount, paid_amount, due, balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $statement = db()->prepare("INSERT INTO `material_purchase_price` (invoice_id, store_id, subtotal, discount_type, discount_amount, shipping_type, shipping_amount, others_charge, item_tax, order_tax, cgst, sgst, igst, payable_amount, paid_amount, due, balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $statement->execute(array($invoice_id, $store_id, $subtotal, $discount_type, $discount_amount, $shipping_type, $shipping_amount, $others_charge, $item_tax, $order_tax, $tcgst, $tsgst, $tigst, $payable_amount, $paid_amount, $due, $balance));
 
     // Upload attachment
@@ -287,7 +287,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
             unlink($targetFile);  
         } 
         // Update invoice url
-        $statement = db()->prepare("UPDATE  `purchase_info` SET `attachment` = ? WHERE `invoice_id` = ? AND `store_id` = ?");
+        $statement = db()->prepare("UPDATE  `material_purchase_info` SET `attachment` = ? WHERE `invoice_id` = ? AND `store_id` = ?");
         $statement->execute(array($newfilename, $invoice_id, $store_id));
         move_uploaded_file($sourcePath, $targetFile);
     }
@@ -297,7 +297,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
         $statement->execute(array($store_id, $invoice_id, $pmethod_id, $purchase_note, $paid_amount, $total_paid, $balance, $user_id, $created_at));
 
         // Update checkout status
-        $statement = db()->prepare("UPDATE `purchase_info` SET `checkout_status` = ? WHERE `invoice_id` = ? AND `store_id` = ?");
+        $statement = db()->prepare("UPDATE `material_purchase_info` SET `checkout_status` = ? WHERE `invoice_id` = ? AND `store_id` = ?");
         $statement->execute(array(1, $invoice_id, $store_id));
     }
 
@@ -313,7 +313,7 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
         $update_due = db()->prepare("UPDATE `supplier_to_store` SET `balance` = `balance` + $due WHERE `sup_id` = ? AND `store_id` = ?");
         $update_due->execute(array($sup_id, $store_id));
     } else {
-        $update_due = db()->prepare("UPDATE `purchase_info` SET `payment_status` = ? WHERE `invoice_id` = ? AND `store_id` = ?");
+        $update_due = db()->prepare("UPDATE `material_purchase_info` SET `payment_status` = ? WHERE `invoice_id` = ? AND `store_id` = ?");
         $update_due->execute(array('paid', $invoice_id, $store_id));
     }
 
@@ -370,6 +370,7 @@ if($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action_
       throw new Exception(trans('error_delete_permission'));
     }
 
+
     // Validate invoice id
     if (empty($request->post['invoice_id'])) {
       throw new Exception(trans('error_invoice_id'));
@@ -379,15 +380,22 @@ if($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action_
 
     $invoice_id = $request->post['invoice_id'];
 
+ //throw new Exception($invoice_id);
+
     // Check, if invoice exist or not
-    $invoice_info = $invoice_model->getInvoiceInfo($invoice_id, $store_id);
+   // $invoice_info = $invoice_model->getInvoiceInfo($invoice_id, $store_id);
+     $invoice_info = $invoice_model->getInvoiceInfo($invoice_id, $store_id);
+    throw new Exception($invoice_info);
+
     if (!$invoice_info) {
         throw new Exception(trans('error_invoice_id'));
     }
+
+
     $purchase_date = date('Y-m-d H:i:s',strtotime($invoice_info['purchase_date']));
     $due = $invoice_info['due'];
 
-    $statement = db()->prepare("SELECT `item_id`, SUM(`item_quantity`) as item_quantity, SUM(`total_sell`) as total_sell, `status`, `return_quantity` FROM `purchase_item` WHERE `store_id` = ? AND `invoice_id` = ? GROUP BY `status` DESC");
+    $statement = db()->prepare("SELECT `item_id`, SUM(`item_quantity`) as item_quantity, SUM(`total_sell`) as total_sell, `status`, `return_quantity` FROM `material_purchase_item` WHERE `store_id` = ? AND `invoice_id` = ? GROUP BY `status` DESC");
     $statement->execute(array($store_id, $invoice_id));
     $purchase_item = $statement->fetch(PDO::FETCH_ASSOC);
 
@@ -404,19 +412,19 @@ if($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action_
 
     // Quantity Adjustment
     $return_quantity = $purchase_item['item_quantity'] - ($purchase_item['total_sell'] + $purchase_item['return_quantity']);
-    $statement = db()->prepare("UPDATE `product_to_store` SET `quantity_in_stock` = `quantity_in_stock` - $return_quantity WHERE `store_id` = ? AND `product_id` = ?");
+    $statement = db()->prepare("UPDATE `material_to_store` SET `quantity_in_stock` = `quantity_in_stock` - $return_quantity WHERE `store_id` = ? AND `product_id` = ?");
     $statement->execute(array($store_id, $purchase_item['item_id']));
 
     // Delete invoice info
-    $statement = db()->prepare("DELETE FROM  `purchase_info` WHERE `store_id` = ? AND `invoice_id` = ? LIMIT 1");
+    $statement = db()->prepare("DELETE FROM  `material_purchase_info` WHERE `store_id` = ? AND `invoice_id` = ? LIMIT 1");
     $statement->execute(array($store_id, $invoice_id));
 
     // Delete invocie item
-    $statement = db()->prepare("DELETE FROM  `purchase_item` WHERE `store_id` = ? AND `invoice_id` = ?");
+    $statement = db()->prepare("DELETE FROM  `material_purchase_item` WHERE `store_id` = ? AND `invoice_id` = ?");
     $statement->execute(array($store_id, $invoice_id));
 
     // Delete purchase price info
-    $statement = db()->prepare("DELETE FROM  `purchase_price` WHERE `store_id` = ? AND `invoice_id` = ?");
+    $statement = db()->prepare("DELETE FROM  `material_purchase_price` WHERE `store_id` = ? AND `invoice_id` = ?");
     $statement->execute(array($store_id, $invoice_id));
 
     // Delete purchase payments
@@ -497,7 +505,7 @@ if($request->server['REQUEST_METHOD'] == 'POST' && $request->post['action_type']
         $invoice_id = $request->post['invoice_id'];
 
         // Check, if invoice exist or not
-        $invoice_info = $invoice_model->getInvoiceInfo($invoice_id);
+        $invoice_info = $invoice_model->getInvoiceMaterialInfo($invoice_id);
         if (!$invoice_info) {
             throw new Exception(trans('error_invoice_id'));
         }
@@ -509,7 +517,7 @@ if($request->server['REQUEST_METHOD'] == 'POST' && $request->post['action_type']
         $payable_amount = $invoice_info['payable_amount'];
 
         // Update invoice info
-        $statement = db()->prepare("UPDATE `purchase_info` SET `purchase_note` = ? WHERE `store_id` = ? AND `invoice_id` = ? LIMIT 1");
+        $statement = db()->prepare("UPDATE `material_purchase_info` SET `purchase_note` = ? WHERE `store_id` = ? AND `invoice_id` = ? LIMIT 1");
         $statement->execute(array($purchase_note, $store_id, $invoice_id));
 
         $Hooks->do_action('After_Update_Purchase_Invoice', $invoice_id);
@@ -533,7 +541,7 @@ if (isset($request->get['action_type']) AND $request->get['action_type'] == 'INV
     try {
 
         $invoice_id = isset($request->get['invoice_id']) ? $request->get['invoice_id'] : null;
-        $invoice = $invoice_model->getInvoiceInfo($invoice_id);
+        $invoice = $invoice_model->getInvoiceMaterialInfo($invoice_id);
         if (!$invoice) {
             throw new Exception(trans('error_invoice_not_found'));
         }
@@ -556,12 +564,12 @@ if (isset($request->get['action_type']) && $request->get['action_type'] == 'PAYM
     $invoice_id = isset($request->get['invoice_id']) && $request->get['invoice_id'] != 'null' ? $request->get['invoice_id'] : '';
     $order = array();
     $items = array();
-    $where_query = "`purchase_info`.`store_id` = ?";
+    $where_query = "`material_purchase_info`.`store_id` = ?";
     if ($invoice_id) {
-      $where_query .= " AND `purchase_info`.`invoice_id` = '{$invoice_id}'";
+      $where_query .= " AND `material_purchase_info`.`invoice_id` = '{$invoice_id}'";
     }
-    $statement = db()->prepare("SELECT * FROM `purchase_info` 
-          LEFT JOIN `purchase_price` ON (`purchase_price`.`invoice_id` = `purchase_info`.`invoice_id`)
+    $statement = db()->prepare("SELECT * FROM `material_purchase_info` 
+          LEFT JOIN `material_purchase_price` ON (`material_purchase_price`.`invoice_id` = `material_purchase_info`.`invoice_id`)
           WHERE $where_query");
     $statement->execute(array($store_id));
     $order = $statement->fetch(PDO::FETCH_ASSOC);
@@ -589,12 +597,12 @@ if (isset($request->get['action_type']) AND $request->get['action_type'] == 'INV
     try {
 
         $user_id = isset($request->get['user_id']) ? $request->get['user_id'] : null;
-        $where_query = "`purchase_info`.`inv_type` IN ('purchase','transfer') AND `created_by` = ? AND `is_visible` = ?";
+        $where_query = "`material_purchase_info`.`inv_type` IN ('purchase','transfer') AND `created_by` = ? AND `is_visible` = ?";
         $from = from() ? from() : date('Y-m-d');
         $to = to() ? to() : date('Y-m-d');
         $where_query .= date_range_filter($from, $to);
-        $statement = db()->prepare("SELECT * FROM `purchase_info` 
-            LEFT JOIN `purchase_price` ON (`purchase_info`.`invoice_id` = `purchase_price`.`invoice_id`)
+        $statement = db()->prepare("SELECT * FROM `material_purchase_info` 
+            LEFT JOIN `material_purchase_price` ON (`material_purchase_info`.`invoice_id` = `material_purchase_price`.`invoice_id`)
             WHERE $where_query");
         $statement->execute(array($user_id, 1));
         $invoices = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -620,13 +628,13 @@ if (isset($request->get['action_type']) AND $request->get['action_type'] == 'INV
     try {
 
         $user_id = isset($request->get['user_id']) ? $request->get['user_id'] : null;
-        $where_query = "`purchase_info`.`inv_type`IN ('purchase','transfer') AND `created_by` = ? AND `is_visible` = ? AND `purchase_price`.`due` > 0";
+        $where_query = "`material_purchase_info`.`inv_type`IN ('purchase','transfer') AND `created_by` = ? AND `is_visible` = ? AND `material_purchase_price`.`due` > 0";
         $from = from() ? from() : date('Y-m-d');
         $to = to() ? to() : date('Y-m-d');
         $where_query .= date_range_filter($from, $to);
 
-        $statement = db()->prepare("SELECT * FROM `purchase_info` 
-            LEFT JOIN `purchase_price` ON (`purchase_info`.`invoice_id` = `purchase_price`.`invoice_id`)
+        $statement = db()->prepare("SELECT * FROM `material_purchase_info` 
+            LEFT JOIN `material_purchase_price` ON (`material_purchase_info`.`invoice_id` = `material_purchase_price`.`invoice_id`)
             WHERE $where_query");
         $statement->execute(array($user_id, 1));
         $invoices = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -650,7 +658,7 @@ if (isset($request->get['action_type']) AND $request->get['action_type'] == 'INV
 if (isset($request->get['invoice_id']) && isset($request->get['action_type']) && $request->get['action_type'] == 'VIEW') 
 {
     $invoice_id = $request->get['invoice_id'];
-    $invoice = $invoice_model->getInvoiceInfo($invoice_id);
+    $invoice = $invoice_model->getInvoiceMaterialInfo($invoice_id);
     $invoice_items = $invoice_model->getInvoiceItems($invoice_id);
 
     $return_model = registry()->get('loader')->model('purchasereturn');
@@ -679,36 +687,36 @@ if (user_group_id() != 1 && !has_permission('access', 'read_purchase_list')) {
 
 $Hooks->do_action('Before_Showing_Purchase_Invoice_List');
 
-$where_query = "purchase_info.inv_type IN ('purchase','transfer') AND purchase_info.store_id = " . $store_id;
+$where_query = "material_purchase_info.inv_type IN ('purchase','transfer') AND material_purchase_info.store_id = " . $store_id;
 if (isset($request->get['type']) && ($request->get['type'] != 'undefined') && $request->get['type'] != '') {
     switch ($request->get['type']) {
         case 'due':
-            $where_query .= " AND purchase_info.payment_status = 'due'";
+            $where_query .= " AND material_purchase_info.payment_status = 'due'";
             break;
         case 'paid':
-            $where_query .= " AND purchase_info.payment_status = 'paid'";
+            $where_query .= " AND material_purchase_info.payment_status = 'paid'";
             break;
         case 'transfer':
-            $where_query .= " AND purchase_info.inv_type = 'transfer'";
+            $where_query .= " AND material_purchase_info.inv_type = 'transfer'";
             break;
         case 'inactive':
-            $where_query .= " AND purchase_info.is_visible = 0";
+            $where_query .= " AND material_purchase_info.is_visible = 0";
             break;
         default:
-            $where_query .= " AND purchase_info.is_visible = 1";
+            $where_query .= " AND material_purchase_info.is_visible = 1";
             break;
     }
 };
 // if (from()) {
   $from = from();
   $to = to();
-  $where_query .= date_range_filter2($from, $to);
+  $where_query .= date_range_filter3($from, $to);
 // }
 
 // DB table to use
-$table = "(SELECT purchase_info.*, purchase_price.payable_amount, purchase_price.paid_amount, purchase_price.due FROM `purchase_info` 
-  LEFT JOIN `purchase_price` ON (purchase_info.invoice_id = purchase_price.invoice_id) 
-  WHERE $where_query) as purchase_info";
+$table = "(SELECT material_purchase_info.*, material_purchase_price.payable_amount, material_purchase_price.paid_amount, material_purchase_price.due FROM `material_purchase_info` 
+  LEFT JOIN `material_purchase_price` ON (material_purchase_info.invoice_id = material_purchase_price.invoice_id) 
+  WHERE $where_query) as material_purchase_info";
 
 // Table's primary key
 $primaryKey = 'info_id';

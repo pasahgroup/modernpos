@@ -396,6 +396,9 @@ function (
                     data: "invoice_id="+d.id+"&action_type=DELETE",
                     dataType: "JSON"
                 })
+
+                //alert('rrr');
+
                 .then(function(response) {
                     dt.DataTable().ajax.reload( null, false );
                     window.swal("success!", response.data.msg, "success");
@@ -403,6 +406,8 @@ function (
                         $tag.button("reset");
                     }, 300);
                 }, function(response) {
+//alert('ttt');
+
                     window.swal("Oops!", response.data.errorMsg, "error");
                     setTimeout(function() {
                         $tag.button("reset");
